@@ -10,6 +10,7 @@
 #include <QTableWidget>
 
 #include "settingswindow.h"
+#include "findduplicatesdialog.h"
 #include "FilterTableHeader.h"
 
 class BackgroundColorDelegate : public QStyledItemDelegate
@@ -65,6 +66,15 @@ MainWindow::MainWindow(QWidget *parent) :
     FilterTableHeader *_tableHeader = new FilterTableHeader(_ui->tableView);
     _ui->tableView->setHorizontalHeader(_tableHeader);
     _ui->tableView->horizontalHeader()->show();
+
+    _ui->progressBar->show();
+    _ui->progressBar->setValue(0);
+
+    // TODO: make it static
+    QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+    _userProfileDesktop = QString(environment.value("userprofile") + "\\Desktop");
+    _allUserProfileDesktop = QString(environment.value("allusersprofile") + "\\Desktop");
+    _publicDesktop = QString(environment.value("public") + "\\Desktop");
 }
 
 void MainWindow::deleteRow()
@@ -294,31 +304,13 @@ void MainWindow::scanFolder()
         return;
     }
 
+    _ui->progressBar->show();
+    _ui->progressBar->setValue(0);
+
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
     QDir userProfileDesktop = QString(environment.value("userprofile") + "\\Desktop");
     QDir allUserProfileDesktop = QString(environment.value("allusersprofile") + "\\Desktop");
     QDir publicDesktop = QString(environment.value("public") + "\\Desktop");
-
-    if(dir == userProfileDesktop ||
-       dir == allUserProfileDesktop ||
-       dir == publicDesktop)
-    {
-        processFolder(userProfileDesktop.path());
-        processFolder(allUserProfileDesktop.path());
-        processFolder(publicDesktop.path());
-    }
-    else
-    {
-        processFolder(dir.path());
-    }
-}
-
-void MainWindow::processFolder(const QString path)
-{
-    _database.transaction();
-
-    QSqlQuery query;
-    query.prepare("INSERT INTO Catalog (FullPath, Name, Extension, Size, MD5) VALUES(:FullPath,:Name,:Extension,:Size, :MD5);");
 
     QStringList maskList;
     foreach (const auto& item, _extensionList)
@@ -326,9 +318,107 @@ void MainWindow::processFolder(const QString path)
         maskList << "*." + item;
     }
 
-    QDirIterator it(path, maskList, QDir::Files, QDirIterator::Subdirectories);
+
+    QStringList dirsForScanning = getDirsForScanning(dir.path());
+    int totalCount = filesCount(dirsForScanning, maskList);
+    _ui->progressBar->setMaximum(totalCount);
+
+    processFolders(dirsForScanning, maskList);
+
+    _ui->progressBar->setValue(_ui->progressBar->maximum());
+    _ui->progressBar->hide();
+}
+
+void MainWindow::stepProgress()
+{
+    QCoreApplication::processEvents();
+    _ui->progressBar->setValue(_ui->progressBar->value() + 1);
+}
+
+int MainWindow::filesCount(const QStringList &dirs, const QStringList &maskList)
+{
+    int result = 0;
+
+    foreach (const auto &dir, dirs)
+    {
+        QDirIterator it(dir, maskList, QDir::Files, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
+        int count = 0;
+        while (it.hasNext())
+        {
+            count++;
+            qDebug() << it.next();
+        }
+
+        result += count;
+    }
+
+    return result;
+}
+
+QStringList MainWindow::getDirsForScanning(const QDir &dir)
+{
+    QStringList result;
+
+    if(dir == _userProfileDesktop ||
+       dir == _allUserProfileDesktop ||
+       dir == _publicDesktop)
+    {
+        addToDirsForScanning(_userProfileDesktop.path(), result);
+        addToDirsForScanning(_allUserProfileDesktop.path(), result);
+        addToDirsForScanning(_publicDesktop.path(), result);
+    }
+    else
+    {
+        addToDirsForScanning(dir.path(), result);
+    }
+
+
+    QDirIterator it(dir.path(), QStringList() << "*.lnk", QDir::AllEntries, QDirIterator::Subdirectories);
     while (it.hasNext())
     {
+        qDebug() << it.next();
+
+        QFileInfo currentFileInfo = it.fileInfo();
+
+        if(currentFileInfo.isSymLink())
+        {
+            QString symLinkTarget = currentFileInfo.symLinkTarget();
+            result << getDirsForScanning(symLinkTarget);
+        }
+    }
+
+    return result;
+}
+
+void MainWindow::addToDirsForScanning(const QString &path, QStringList &dirsForScanning)
+{
+    if(dirsForScanning.indexOf(path) == -1)
+    {
+        dirsForScanning << path;
+    }
+}
+
+void MainWindow::processFolders(const QStringList &dirs, const QStringList &maskList)
+{
+    foreach (const auto &dir, dirs)
+    {
+        processFolder(dir, maskList);
+    }
+}
+
+void MainWindow::processFolder(const QString &path, const QStringList &maskList)
+{
+    _database.transaction();
+
+    QSqlQuery query;
+    query.prepare("INSERT INTO Catalog (FullPath, Name, Extension, Size, MD5) VALUES(:FullPath,:Name,:Extension,:Size, :MD5);");
+
+    QDirIterator it(path, maskList, QDir::Files, QDirIterator::Subdirectories);
+    int count = 0;
+    while (it.hasNext())
+    {
+        count++;
+        stepProgress();
         qDebug() << it.next();
 
         QString fullPath = it.filePath();
@@ -439,5 +529,11 @@ void MainWindow::colorSameMd5()
 
 void MainWindow::on_colorDuplicatesBtn_clicked()
 {
-    colorSameMd5();
+    //colorSameMd5();
+
+    FindDuplicatesDialog *settings = new FindDuplicatesDialog(nullptr, &_database);
+
+    settings->exec();
+
+    delete settings;
 }

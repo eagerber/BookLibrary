@@ -12,6 +12,7 @@
 #include <QCryptographicHash>
 #include <QByteArray>
 #include <QStyledItemDelegate>
+#include <QDir>
 
 
 namespace Ui {
@@ -59,9 +60,15 @@ private:
     void saveAsDb();
     void createNewDb();
     void scanFolder();
-    void processFolder(const QString path);
+    void processFolders(const QStringList &dirs, const QStringList &maskList);
+    void processFolder(const QString &path, const QStringList &maskList);
     void colorSameMd5();
 
+    void stepProgress();
+
+    QStringList getDirsForScanning(const QDir &dir);
+    void addToDirsForScanning(const QString &path, QStringList &dirsForScanning);
+    int filesCount(const QStringList &dirs, const QStringList &maskList);
 
     QByteArray fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm);
 
@@ -77,6 +84,10 @@ private:
     QStringList _extensionList;
 
     BackgroundColorDelegate *_backgroundColorDelegate;
+
+    QDir _userProfileDesktop;
+    QDir _allUserProfileDesktop;
+    QDir _publicDesktop;
 };
 
 #endif // MAINWINDOW_H
