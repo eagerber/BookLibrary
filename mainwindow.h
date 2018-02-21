@@ -80,7 +80,6 @@ private:
 
     QStringList _extensionList;
 
-
     QDir _userProfileDesktop;
     QDir _allUserProfileDesktop;
     QDir _publicDesktop;

@@ -57,7 +57,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QListView" name="inspectedCopiesList"/>
+        <widget class="QListView" name="inspectedCopiesList">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="deleteDuplicatesBtn">

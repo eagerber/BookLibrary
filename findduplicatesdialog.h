@@ -5,6 +5,7 @@
 
 #include <QSqlDatabase>
 #include <QStringListModel>
+#include <QItemSelection>
 
 namespace Ui {
 class FindDuplicatesDialog;
@@ -20,12 +21,12 @@ public:
     ~FindDuplicatesDialog();
 
 private slots:
-    void on_inspectedFiles_clicked(const QModelIndex &index);
+    void inspectedFilesSelectionChanged(const QItemSelection& selection);
 
-    void on_inspectedFiles_pressed(const QModelIndex &index);
+    void on_inspectedCopiesList_doubleClicked(const QModelIndex &index);
 
 private:
-    Ui::FindDuplicatesDialog *ui;
+    Ui::FindDuplicatesDialog *_ui;
 
     QSqlDatabase *_database;
 

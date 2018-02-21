@@ -11,7 +11,6 @@
 
 #include "settingswindow.h"
 #include "findduplicatesdialog.h"
-#include "FilterTableHeader.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -34,10 +33,6 @@ MainWindow::MainWindow(QWidget *parent) :
     _ui->colorDuplicatesBtn->setEnabled(false);
 
     _extensionList << "pdf" << "djvu" << "doc" << "docx" << "fb2";
-
-    FilterTableHeader *_tableHeader = new FilterTableHeader(_ui->tableView);
-    _ui->tableView->setHorizontalHeader(_tableHeader);
-    _ui->tableView->horizontalHeader()->show();
 
     _ui->progressBar->show();
     _ui->progressBar->setValue(0);
@@ -101,11 +96,6 @@ void MainWindow::initModel()
     _ui->tableView->setModel(_databaseModel);
 
     _ui->tableView->verticalHeader()->hide();
-
-
-    FilterTableHeader *_tableHeader = new FilterTableHeader(_ui->tableView);
-    _ui->tableView->setHorizontalHeader(_tableHeader);
-
     _ui->tableView->horizontalHeader()->show();
 
     resizeTableView();
