@@ -19,8 +19,6 @@ namespace Ui {
 class MainWindow;
 }
 
-class BackgroundColorDelegate;
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -62,7 +60,6 @@ private:
     void scanFolder();
     void processFolders(const QStringList &dirs, const QStringList &maskList);
     void processFolder(const QString &path, const QStringList &maskList);
-    void colorSameMd5();
 
     void stepProgress();
 
@@ -83,7 +80,6 @@ private:
 
     QStringList _extensionList;
 
-    BackgroundColorDelegate *_backgroundColorDelegate;
 
     QDir _userProfileDesktop;
     QDir _allUserProfileDesktop;

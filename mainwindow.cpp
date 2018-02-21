@@ -13,31 +13,6 @@
 #include "findduplicatesdialog.h"
 #include "FilterTableHeader.h"
 
-class BackgroundColorDelegate : public QStyledItemDelegate
-{
-public:
-    BackgroundColorDelegate(QObject *parent = 0)
-        : QStyledItemDelegate(parent)
-    {
-    }
-
-    QColor calculateColorForRow() const
-    {
-        return Qt::GlobalColor::green;
-    }
-
-    void initStyleOption(QStyleOptionViewItem *option,
-                         const QModelIndex &index) const
-    {
-        QStyledItemDelegate::initStyleOption(option, index);
-
-        QStyleOptionViewItem *optionV4 =
-                qstyleoption_cast<QStyleOptionViewItem*>(option);
-
-        optionV4->backgroundBrush = QBrush(calculateColorForRow());
-    }
-};
-
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -59,9 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
     _ui->colorDuplicatesBtn->setEnabled(false);
 
     _extensionList << "pdf" << "djvu" << "doc" << "docx" << "fb2";
-
-    _backgroundColorDelegate = new BackgroundColorDelegate();
-
 
     FilterTableHeader *_tableHeader = new FilterTableHeader(_ui->tableView);
     _ui->tableView->setHorizontalHeader(_tableHeader);
@@ -98,8 +70,6 @@ void MainWindow::deleteRow()
     {
         _databaseModel->database().rollback();  
     }
-
-    colorSameMd5();
 }
 
 MainWindow::~MainWindow()
@@ -107,7 +77,6 @@ MainWindow::~MainWindow()
     _database.close();
     delete _databaseModel;
     delete _ui;
-    delete _backgroundColorDelegate;
 }
 
 void MainWindow::initModel()
@@ -503,28 +472,6 @@ QByteArray MainWindow::fileChecksum(const QString &fileName, QCryptographicHash:
     }
 
     return QByteArray();
-}
-
-void MainWindow::colorSameMd5()
-{
-    BackgroundColorDelegate *backgroundColorDelegate = new BackgroundColorDelegate;
-
-    for(int i = 0; i < _ui->tableView->model()->rowCount() - 1; ++i)
-    {
-        QByteArray hash1 = _ui->tableView->model()->index(i, 5).data().toByteArray();
-        QByteArray hash2 = _ui->tableView->model()->index(i + 1, 5).data().toByteArray();
-
-        if(hash1 == hash2)
-        {
-            _ui->tableView->setItemDelegateForRow(i, backgroundColorDelegate);
-            _ui->tableView->setItemDelegateForRow(i + 1, backgroundColorDelegate);
-            ++i;
-        }
-        else
-        {
-            _ui->tableView->setItemDelegateForRow(i, nullptr);
-        }
-    }
 }
 
 void MainWindow::on_colorDuplicatesBtn_clicked()

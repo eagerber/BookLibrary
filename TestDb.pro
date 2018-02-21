@@ -26,14 +26,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     settingswindow.cpp \
-    FilterLineEdit.cpp \
-    FilterTableHeader.cpp \
     findduplicatesdialog.cpp
 
 HEADERS  += mainwindow.h \
     settingswindow.h \
-    FilterLineEdit.h \
-    FilterTableHeader.h \
     findduplicatesdialog.h
 
 FORMS    += mainwindow.ui \
