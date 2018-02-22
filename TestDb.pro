@@ -26,12 +26,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     settingswindow.cpp \
-    findduplicatesdialog.cpp
+    findduplicatesdialog.cpp \
+    automaticduplicatesprocessdialog.cpp
 
 HEADERS  += mainwindow.h \
     settingswindow.h \
-    findduplicatesdialog.h
+    findduplicatesdialog.h \
+    automaticduplicatesprocessdialog.h
 
 FORMS    += mainwindow.ui \
     settingswindow.ui \
-    findduplicatesdialog.ui
+    findduplicatesdialog.ui \
+    automaticduplicatesprocessdialog.ui

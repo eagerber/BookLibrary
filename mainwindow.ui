@@ -37,11 +37,17 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="colorDuplicatesBtn">
-          <property name="text">
-           <string>Find Duplicates</string>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
-         </widget>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
@@ -76,8 +82,14 @@
       </item>
       <item row="3" column="0">
        <widget class="QProgressBar" name="progressBar">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="value">
-         <number>24</number>
+         <number>0</number>
+        </property>
+        <property name="textVisible">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -109,6 +121,15 @@
     <property name="title">
      <string>Tool</string>
     </property>
+    <widget class="QMenu" name="menuDuplicates">
+     <property name="title">
+      <string>Duplicates</string>
+     </property>
+     <addaction name="actionManual_process"/>
+     <addaction name="actionAutomatic_process"/>
+    </widget>
+    <addaction name="menuDuplicates"/>
+    <addaction name="separator"/>
     <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuFile"/>
@@ -143,14 +164,19 @@
     <string>Save As</string>
    </property>
   </action>
-  <action name="actionClose_DB">
-   <property name="text">
-    <string>Close DB</string>
-   </property>
-  </action>
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionManual_process">
+   <property name="text">
+    <string>Manual process</string>
+   </property>
+  </action>
+  <action name="actionAutomatic_process">
+   <property name="text">
+    <string>Automatic process</string>
    </property>
   </action>
  </widget>

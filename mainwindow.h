@@ -48,7 +48,7 @@ private slots:
 
     void on_actionSettings_triggered();
 
-    void on_colorDuplicatesBtn_clicked();
+    void on_actionManual_process_triggered();
 
 private:
     void initModel();

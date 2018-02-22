@@ -464,10 +464,8 @@ QByteArray MainWindow::fileChecksum(const QString &fileName, QCryptographicHash:
     return QByteArray();
 }
 
-void MainWindow::on_colorDuplicatesBtn_clicked()
+void MainWindow::on_actionManual_process_triggered()
 {
-    //colorSameMd5();
-
     FindDuplicatesDialog *settings = new FindDuplicatesDialog(nullptr, &_database);
 
     settings->exec();
