@@ -11,6 +11,7 @@
 
 #include "settingswindow.h"
 #include "findduplicatesdialog.h"
+#include "cdopelgangerslibrary.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -30,8 +31,6 @@ MainWindow::MainWindow(QWidget *parent) :
     _ui->scanDirectoryBtn->setEnabled(false);
     _ui->addRowBtn->setEnabled(false);
     _ui->menuDuplicates->setEnabled(false);
-
-
 
     _extensionList << "pdf" << "djvu" << "doc" << "docx" << "fb2";
 
@@ -465,11 +464,18 @@ QByteArray MainWindow::fileChecksum(const QString &fileName, QCryptographicHash:
 
 void MainWindow::on_actionManual_process_triggered()
 {
-    FindDuplicatesDialog *settings = new FindDuplicatesDialog(nullptr, &_database);
+    FindDuplicatesDialog settings;
+    settings.exec();
 
-    settings->exec();
+    _databaseModel->select();
+}
 
-    delete settings;
+void MainWindow::on_actionAutomatic_process_triggered()
+{
+    CDopelgangersLibrary library;
+
+    library.init();
+    library.normalize();
 
     _databaseModel->select();
 }

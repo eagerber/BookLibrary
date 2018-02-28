@@ -50,6 +50,8 @@ private slots:
 
     void on_actionManual_process_triggered();
 
+    void on_actionAutomatic_process_triggered();
+
 private:
     void initModel();
     void resizeTableView();

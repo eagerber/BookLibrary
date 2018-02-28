@@ -27,14 +27,8 @@ FindDuplicatesDialog::FindDuplicatesDialog(QWidget *parent) :
     connect(_ui->inspectedFiles->selectionModel(),
        SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
        this, SLOT(inspectedFilesSelectionChanged(QItemSelection)));
-}
 
-FindDuplicatesDialog::FindDuplicatesDialog(QWidget *parent, QSqlDatabase *database) :
-    FindDuplicatesDialog(parent)
-{
-    _database = database;
     _library = new CDopelgangersLibrary();
-
     init();
 }
 
@@ -55,7 +49,6 @@ void FindDuplicatesDialog::init()
 
 FindDuplicatesDialog::~FindDuplicatesDialog()
 {
-    _database = nullptr;
     delete _library;
     delete _inspectedModel;
     delete _inspectedCopiesModel;

@@ -134,7 +134,10 @@ void CDopelgangersLibrary::normalize(const int booksListIndex, const int trueBoo
 
 void CDopelgangersLibrary::normalize()
 {
-
+    for(int i = 0; i < _booksList.length(); ++i)
+    {
+        normalize(i);
+    }
 }
 
 void CDopelgangersLibrary::deleteFile(const QString &filename)

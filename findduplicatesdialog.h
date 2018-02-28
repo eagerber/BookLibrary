@@ -20,8 +20,7 @@ class FindDuplicatesDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FindDuplicatesDialog(QWidget *parent = 0);
-    explicit FindDuplicatesDialog(QWidget *parent, QSqlDatabase *database);
+    explicit FindDuplicatesDialog(QWidget *parent = 0);    
     ~FindDuplicatesDialog();
 
 private slots:
@@ -36,14 +35,10 @@ private:
 
     Ui::FindDuplicatesDialog *_ui;
 
-    QSqlDatabase *_database;
-
     QStringListModel *_inspectedModel;
     QStringListModel *_inspectedCopiesModel;
 
     CDopelgangersLibrary *_library;
-
-    //QStringList _bookList, _dopelgangersList;
 };
 
 #endif // FINDDUPLICATESDIALOG_H
