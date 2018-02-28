@@ -13,59 +13,7 @@
 #include "Windows.h"
 #include "shellapi.h"
 
-struct CBookRecord
-{
-    int _id;
-    QString _name;
-    QString _fullPath;
-
-    CBookRecord(const int id, const QString &name, const QString &fullPath)
-    {
-        _id = id;
-        _name = name;
-        _fullPath = fullPath;
-    }
-};
-
-struct CDuplicatedBookRecord : public CBookRecord
-{
-    QList<CBookRecord> _dopelgangers;
-
-    QStringList dopelgangersStringList()
-    {
-        QStringList result;
-
-        foreach (const auto &dopelganger, _dopelgangers)
-        {
-            result << dopelganger._fullPath;
-        }
-
-        return result;
-    }
-
-    CDuplicatedBookRecord(const int id, const QString &name, const QString &fullPath)
-        : CBookRecord(id, name, fullPath)
-    {
-
-    }
-};
-
-struct CDopelgangersLibrary
-{
-    QList<CDuplicatedBookRecord> _items;
-
-    QStringList toStringList()
-    {
-        QStringList result;
-
-        foreach (const auto &book, _items)
-        {
-            result << book._name;
-        }
-
-        return result;
-    }
-};
+#include "cdopelgangerslibrary.h"
 
 FindDuplicatesDialog::FindDuplicatesDialog(QWidget *parent) :
     QDialog(parent),
@@ -120,9 +68,11 @@ void FindDuplicatesDialog::init()
         {
             currentItem++;
 
-            _library->_items.push_back(CDuplicatedBookRecord(id, name, fullPath));
+            _library->addItem(CDuplicatedBookRecord(id, name, fullPath));
+            //_library->_items.push_back(CDuplicatedBookRecord(id, name, fullPath));
         }
-        _library->_items.last()._dopelgangers.push_back(CBookRecord(id, name, fullPath));
+        //_library->_items.last()._dopelgangers.push_back(CBookRecord(id, name, fullPath));
+        _library->last().addDuplicate(CBookRecord(id, name, fullPath));
 
         prevMd5 = currentMd5;
         prevSize = currentSize;
@@ -131,9 +81,9 @@ void FindDuplicatesDialog::init()
     query.clear();
 
     _bookList = _library->toStringList();
-    if (_library->_items.length() > 0)
+    if (_library->length() > 0)
     {
-        _dopelgangersList = _library->_items.first().dopelgangersStringList();
+        _dopelgangersList = _library->first().dopelgangersStringList();
     }
     else
     {
@@ -158,7 +108,7 @@ FindDuplicatesDialog::~FindDuplicatesDialog()
 void FindDuplicatesDialog::inspectedFilesSelectionChanged(const QItemSelection& selection)
 {
     int row = selection.indexes().first().row();
-    _dopelgangersList = _library->_items[row].dopelgangersStringList();
+    _dopelgangersList = _library->at(row).dopelgangersStringList();
 
     _inspectedCopiesModel->setStringList(_dopelgangersList);
 }
@@ -189,7 +139,7 @@ void FindDuplicatesDialog::on_deleteDuplicatesBtn_clicked()
         }
 
         int row = _ui->inspectedFiles->selectionModel()->currentIndex().row();
-        deleteFromDb(_library->_items[row]._dopelgangers[i]._id);
+        deleteFromDb(_library->at(row).at(i).id());
 
         if(_dopelgangersList[i] != sourceFile)
         {

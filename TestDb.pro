@@ -27,12 +27,18 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     settingswindow.cpp \
     findduplicatesdialog.cpp \
-    automaticduplicatesprocessdialog.cpp
+    automaticduplicatesprocessdialog.cpp \
+    cdopelgangerslibrary.cpp \
+    cduplicatedbookrecord.cpp \
+    cbookrecord.cpp
 
 HEADERS  += mainwindow.h \
     settingswindow.h \
     findduplicatesdialog.h \
-    automaticduplicatesprocessdialog.h
+    automaticduplicatesprocessdialog.h \
+    cdopelgangerslibrary.h \
+    cduplicatedbookrecord.h \
+    cbookrecord.h
 
 FORMS    += mainwindow.ui \
     settingswindow.ui \
