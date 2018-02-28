@@ -8,6 +8,7 @@
 #include <QItemSelection>
 #include <QList>
 
+
 namespace Ui {
 class FindDuplicatesDialog;
 }

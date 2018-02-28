@@ -8,6 +8,10 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QList>
+#include <QDebug>
+
+#include "Windows.h"
+#include "shellapi.h"
 
 struct CBookRecord
 {
@@ -198,8 +202,21 @@ void FindDuplicatesDialog::on_deleteDuplicatesBtn_clicked()
 
 void FindDuplicatesDialog::deleteFile(const QString &filename)
 {
-    QFile file(filename);
-    file.remove();
+    //QFile file(filename);
+    //file.remove();
+
+    // Move to recycle bin
+    LPCSTR lpcFrom = (LPCSTR)filename.toLocal8Bit().constData();
+
+    SHFILEOPSTRUCTA operation;
+
+    operation.wFunc = FO_DELETE;
+    operation.pFrom = lpcFrom;
+    operation.fFlags = FOF_ALLOWUNDO|FOF_NO_UI|FOF_NORECURSION;
+
+    int result = SHFileOperationA(&operation);
+
+    qDebug() << filename << result;
 }
 
 void FindDuplicatesDialog::deleteFromDb(const int id)
