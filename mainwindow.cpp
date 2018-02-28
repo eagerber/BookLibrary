@@ -29,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _ui->actionSaveAs->setEnabled(false);
     _ui->scanDirectoryBtn->setEnabled(false);
     _ui->addRowBtn->setEnabled(false);
+    _ui->menuDuplicates->setEnabled(false);
+
+
 
     _extensionList << "pdf" << "djvu" << "doc" << "docx" << "fb2";
 
@@ -154,6 +157,7 @@ void MainWindow::openDb()
     _ui->actionSaveAs->setEnabled(true);
     _ui->scanDirectoryBtn->setEnabled(true);
     _ui->addRowBtn->setEnabled(true);
+    _ui->menuDuplicates->setEnabled(true);
 }
 
 void MainWindow::saveDb()
@@ -233,6 +237,7 @@ void MainWindow::createNewDb()
     _ui->actionSaveAs->setEnabled(true);
     _ui->scanDirectoryBtn->setEnabled(true);
     _ui->addRowBtn->setEnabled(true);
+    _ui->menuDuplicates->setEnabled(true);
 }
 
 void MainWindow::scanFolder()
