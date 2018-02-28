@@ -6,10 +6,13 @@
 #include <QSqlDatabase>
 #include <QStringListModel>
 #include <QItemSelection>
+#include <QList>
 
 namespace Ui {
 class FindDuplicatesDialog;
 }
+
+class CDopelgangersLibrary;
 
 class FindDuplicatesDialog : public QDialog
 {
@@ -25,7 +28,13 @@ private slots:
 
     void on_inspectedCopiesList_doubleClicked(const QModelIndex &index);
 
+    void on_deleteDuplicatesBtn_clicked();
+
 private:
+    void init();
+    void deleteFile(const QString &filename);
+    void deleteFromDb(const int id);
+
     Ui::FindDuplicatesDialog *_ui;
 
     QSqlDatabase *_database;
@@ -33,7 +42,9 @@ private:
     QStringListModel *_inspectedModel;
     QStringListModel *_inspectedCopiesModel;
 
-    QVector<QStringList> inspectedCopiesData;
+    CDopelgangersLibrary *_library;
+
+    QStringList _bookList, _dopelgangersList;
 };
 
 #endif // FINDDUPLICATESDIALOG_H

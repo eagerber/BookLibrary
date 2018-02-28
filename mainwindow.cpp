@@ -27,10 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     _ui->actionSave->setEnabled(false);
     _ui->actionSaveAs->setEnabled(false);
-    _ui->actionClose_DB->setEnabled(false);
     _ui->scanDirectoryBtn->setEnabled(false);
     _ui->addRowBtn->setEnabled(false);
-    _ui->colorDuplicatesBtn->setEnabled(false);
 
     _extensionList << "pdf" << "djvu" << "doc" << "docx" << "fb2";
 
@@ -154,10 +152,8 @@ void MainWindow::openDb()
 
     _ui->actionSave->setEnabled(true);
     _ui->actionSaveAs->setEnabled(true);
-    _ui->actionClose_DB->setEnabled(true);
     _ui->scanDirectoryBtn->setEnabled(true);
     _ui->addRowBtn->setEnabled(true);
-    _ui->colorDuplicatesBtn->setEnabled(true);
 }
 
 void MainWindow::saveDb()
@@ -235,10 +231,8 @@ void MainWindow::createNewDb()
 
     _ui->actionSave->setEnabled(true);
     _ui->actionSaveAs->setEnabled(true);
-    _ui->actionClose_DB->setEnabled(true);
     _ui->scanDirectoryBtn->setEnabled(true);
     _ui->addRowBtn->setEnabled(true);
-    _ui->colorDuplicatesBtn->setEnabled(true);
 }
 
 void MainWindow::scanFolder()
@@ -471,4 +465,6 @@ void MainWindow::on_actionManual_process_triggered()
     settings->exec();
 
     delete settings;
+
+    _databaseModel->select();
 }
