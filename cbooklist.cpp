@@ -10,7 +10,7 @@ CBookList::CBookList()
 CBookList::CBookList(const CBookList &rValue)
     : CBook(rValue)
 {
-    _dopelgangers = rValue._dopelgangers;
+    _books = rValue._books;
 }
 
 CBookList::CBookList(const int id, const QString &name, const QString &fullPath)
@@ -21,19 +21,24 @@ CBookList::CBookList(const int id, const QString &name, const QString &fullPath)
 
 void CBookList::addDuplicate(const CBook &duplicate)
 {
-    _dopelgangers.push_back(duplicate);
+    _books.push_back(duplicate);
 }
 
 CBook& CBookList::at(const int index)
 {
-    return _dopelgangers[index];
+    return _books[index];
 }
 
-QStringList CBookList::dopelgangersStringList()
+int CBookList::length() const
+{
+    return _books.length();
+}
+
+QStringList CBookList::toStringList()
 {
     QStringList result;
 
-    foreach (const auto &dopelganger, _dopelgangers)
+    foreach (const auto &dopelganger, _books)
     {
         result << dopelganger.fullPath();
     }

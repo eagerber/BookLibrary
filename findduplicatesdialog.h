@@ -33,8 +33,6 @@ private slots:
 
 private:
     void init();
-    void deleteFile(const QString &filename);
-    void deleteFromDb(const int id);
 
     Ui::FindDuplicatesDialog *_ui;
 
@@ -45,7 +43,7 @@ private:
 
     CDopelgangersLibrary *_library;
 
-    QStringList _bookList, _dopelgangersList;
+    //QStringList _bookList, _dopelgangersList;
 };
 
 #endif // FINDDUPLICATESDIALOG_H

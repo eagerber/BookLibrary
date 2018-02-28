@@ -10,9 +10,6 @@
 #include <QList>
 #include <QDebug>
 
-#include "Windows.h"
-#include "shellapi.h"
-
 #include "cdopelgangerslibrary.h"
 
 FindDuplicatesDialog::FindDuplicatesDialog(QWidget *parent) :
@@ -48,50 +45,10 @@ void FindDuplicatesDialog::init()
         delete _library;
     }
     _library = new CDopelgangersLibrary();
+    _library->init();
 
-    QSqlQuery query;
-    query.exec("SELECT Id, FullPath, Name, Extension, Size, MD5 FROM Catalog c2 WHERE ( SELECT COUNT(*) FROM Catalog c1 WHERE c1.MD5 = c2.MD5 ) > 1 ORDER BY MD5;");
-
-    QByteArray prevMd5;
-    int prevSize = -1;
-    int currentItem = -1;
-    while (query.next())
-    {
-        QByteArray currentMd5 = query.value(5).toByteArray();
-        int currentSize = query.value(4).toInt();
-
-        QString name = query.value(2).toString();
-        QString fullPath = query.value(1).toString();
-        int id = query.value(0).toInt();
-
-        if ((prevMd5 != currentMd5) || (prevSize != currentSize))
-        {
-            currentItem++;
-
-            _library->addItem(CBookList(id, name, fullPath));
-            //_library->_items.push_back(CDuplicatedBookRecord(id, name, fullPath));
-        }
-        //_library->_items.last()._dopelgangers.push_back(CBookRecord(id, name, fullPath));
-        _library->last().addDuplicate(CBook(id, name, fullPath));
-
-        prevMd5 = currentMd5;
-        prevSize = currentSize;
-    }
-
-    query.clear();
-
-    _bookList = _library->toStringList();
-    if (_library->length() > 0)
-    {
-        _dopelgangersList = _library->first().dopelgangersStringList();
-    }
-    else
-    {
-        _dopelgangersList = QStringList();
-    }
-
-    _inspectedModel->setStringList(_bookList);
-    _inspectedCopiesModel->setStringList(_dopelgangersList);
+    _inspectedModel->setStringList(_library->books());
+    _inspectedCopiesModel->setStringList(_library->duplicatesByIndex(0));
 
     _ui->inspectedFiles->setCurrentIndex(_inspectedModel->index(0));
 }
@@ -108,9 +65,8 @@ FindDuplicatesDialog::~FindDuplicatesDialog()
 void FindDuplicatesDialog::inspectedFilesSelectionChanged(const QItemSelection& selection)
 {
     int row = selection.indexes().first().row();
-    _dopelgangersList = _library->at(row).dopelgangersStringList();
 
-    _inspectedCopiesModel->setStringList(_dopelgangersList);
+    _inspectedCopiesModel->setStringList(_library->duplicatesByIndex(row));
 }
 
 void FindDuplicatesDialog::on_inspectedCopiesList_doubleClicked(const QModelIndex &index)
@@ -127,60 +83,10 @@ void FindDuplicatesDialog::on_deleteDuplicatesBtn_clicked()
         return;
     }
 
-    int sourceIndex = _ui->inspectedCopiesList->selectionModel()->currentIndex().row();
+    int booksListIndex = _ui->inspectedFiles->selectionModel()->currentIndex().row();
+    int trueBookIndex = _ui->inspectedCopiesList->selectionModel()->currentIndex().row();
 
-    auto &sourceFile = _dopelgangersList.at(sourceIndex);
-
-    for(int i = _dopelgangersList.length() - 1; i > -1; --i)
-    {
-        if(i == sourceIndex)
-        {
-            continue;
-        }
-
-        int row = _ui->inspectedFiles->selectionModel()->currentIndex().row();
-        deleteFromDb(_library->at(row).at(i).id());
-
-        if(_dopelgangersList[i] != sourceFile)
-        {
-            deleteFile(_dopelgangersList[i]);
-        }
-    }
+    _library->normalize(booksListIndex, trueBookIndex);
 
     init();
 }
-
-void FindDuplicatesDialog::deleteFile(const QString &filename)
-{
-    //QFile file(filename);
-    //file.remove();
-
-    // Move to recycle bin
-    LPCSTR lpcFrom = (LPCSTR)filename.toLocal8Bit().constData();
-
-    SHFILEOPSTRUCTA operation;
-
-    operation.wFunc = FO_DELETE;
-    operation.pFrom = lpcFrom;
-    operation.fFlags = FOF_ALLOWUNDO|FOF_NO_UI|FOF_NORECURSION;
-
-    int result = SHFileOperationA(&operation);
-
-    qDebug() << filename << result;
-}
-
-void FindDuplicatesDialog::deleteFromDb(const int id)
-{
-    QString query = QString("DELETE FROM Catalog WHERE Id = %1").arg(id);
-
-    _database->exec(query);
-    _database->commit();
-}
-
-
-
-
-
-
-
-

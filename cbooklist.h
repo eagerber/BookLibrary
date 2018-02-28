@@ -19,10 +19,12 @@ public:
     void addDuplicate(const CBook &duplicate);
     CBook& at(const int index);
 
-    QStringList dopelgangersStringList();
+    int length() const;
+
+    QStringList toStringList();
 
 private:
-    QList<CBook> _dopelgangers;
+    QList<CBook> _books;
 };
 
 #endif // CDUPLICATEDBOOKRECORD_H
