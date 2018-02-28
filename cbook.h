@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QString>
 
-class CBookRecord : public QObject
+class CBook : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int id READ id)
@@ -12,11 +12,11 @@ class CBookRecord : public QObject
     Q_PROPERTY(QString fullPath READ fullPath)
 
 public:
-    explicit CBookRecord();
-    CBookRecord(const CBookRecord &rValue);
+    explicit CBook();
+    CBook(const CBook &rValue);
 
-    CBookRecord(const int id, const QString &name, const QString &fullPath);
-    ~CBookRecord();
+    CBook(const int id, const QString &name, const QString &fullPath);
+    ~CBook();
 
     int id() const;
     QString name() const;

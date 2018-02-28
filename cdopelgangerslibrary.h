@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "cduplicatedbookrecord.h"
+#include "cbooklist.h"
 
 class QSqlDatabase;
 
@@ -17,18 +17,18 @@ public:
 
     ~CDopelgangersLibrary();
 
-    void addItem(const CDuplicatedBookRecord &bookRecord);
+    void addItem(const CBookList &bookRecord);
 
-    CDuplicatedBookRecord& last();
-    CDuplicatedBookRecord& first();
-    CDuplicatedBookRecord& at(const int index);
+    CBookList& last();
+    CBookList& first();
+    CBookList& at(const int index);
 
     int length();
 
     QStringList toStringList();
 
 private:
-    QList<CDuplicatedBookRecord> _items;
+    QList<CBookList> _items;
     QSqlDatabase *_database;
 
 };

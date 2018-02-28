@@ -17,23 +17,23 @@ CDopelgangersLibrary::~CDopelgangersLibrary()
 
 }
 
-void CDopelgangersLibrary::addItem(const CDuplicatedBookRecord &bookRecord)
+void CDopelgangersLibrary::addItem(const CBookList &bookRecord)
 {
     _items.push_back(bookRecord);
 }
 
 
-CDuplicatedBookRecord& CDopelgangersLibrary::last()
+CBookList& CDopelgangersLibrary::last()
 {
     return _items.last();
 }
 
-CDuplicatedBookRecord& CDopelgangersLibrary::first()
+CBookList& CDopelgangersLibrary::first()
 {
     return _items.first();
 }
 
-CDuplicatedBookRecord& CDopelgangersLibrary::at(const int index)
+CBookList& CDopelgangersLibrary::at(const int index)
 {
     return _items[index];
 }

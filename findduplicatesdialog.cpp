@@ -68,11 +68,11 @@ void FindDuplicatesDialog::init()
         {
             currentItem++;
 
-            _library->addItem(CDuplicatedBookRecord(id, name, fullPath));
+            _library->addItem(CBookList(id, name, fullPath));
             //_library->_items.push_back(CDuplicatedBookRecord(id, name, fullPath));
         }
         //_library->_items.last()._dopelgangers.push_back(CBookRecord(id, name, fullPath));
-        _library->last().addDuplicate(CBookRecord(id, name, fullPath));
+        _library->last().addDuplicate(CBook(id, name, fullPath));
 
         prevMd5 = currentMd5;
         prevSize = currentSize;
