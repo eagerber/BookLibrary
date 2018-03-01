@@ -22,7 +22,7 @@ AutomaticDuplicatesProcessDialog::AutomaticDuplicatesProcessDialog(QWidget *pare
         {
             QStandardItem *child = new QStandardItem(_library->at(i, j).fullPath());
             child->setEditable( false );
-            child->setForeground(QBrush(QColor(255, 0, 0)));
+            child->setForeground(QBrush(Qt::GlobalColor::red));
             item->appendRow(child);
         }
         model->setItem(i, 0, item);
