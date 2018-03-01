@@ -23,17 +23,21 @@ public:
 
     CBookList& last();
     CBookList& first();
-    CBookList& at(const int index);
-    CBook& at(const int booksListIndex, const int bookIndex);
+    const CBookList& at(const int index) const;
+    const CBook& at(const int booksListIndex, const int bookIndex) const;
 
-    int length();
+    int length() const;
+    int totalLength() const;
 
     QStringList books();
     QStringList duplicatesByIndex(const int index);
 
     // Delete doppelgangers for bookListIndex set
-    void normalize(const int booksListIndex, const int trueBookIndex = 0);
+    void normalize(const int booksListIndex, const int trueBookIndex);
     void normalize();
+
+    QStringList lookForDuplicates(const int booksListIndex, const int trueBookIndex);
+    QStringList lookForDuplicates();
 
 private:
     void deleteFile(const QString &filename);

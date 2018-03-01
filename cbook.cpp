@@ -27,6 +27,14 @@ CBook::~CBook()
 
 }
 
+CBook& CBook::operator= (const CBook& rValue)
+{
+    _id = rValue._id;
+    _name = rValue._name;
+    _fullPath = rValue._fullPath;
+    return *this;
+}
+
 int CBook::id() const
 {
     return _id;

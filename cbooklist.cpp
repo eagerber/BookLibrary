@@ -24,7 +24,7 @@ void CBookList::addDuplicate(const CBook &duplicate)
     _books.push_back(duplicate);
 }
 
-CBook& CBookList::at(const int index)
+const CBook& CBookList::at(const int index) const
 {
     return _books[index];
 }

@@ -71,19 +71,30 @@ CBookList& CDopelgangersLibrary::first()
     return _booksList.first();
 }
 
-CBookList& CDopelgangersLibrary::at(const int index)
+const CBookList& CDopelgangersLibrary::at(const int index) const
 {
     return _booksList[index];
 }
 
-CBook& CDopelgangersLibrary::at(const int booksListIndex, const int bookIndex)
+const CBook& CDopelgangersLibrary::at(const int booksListIndex, const int bookIndex) const
 {
     return _booksList[booksListIndex].at(bookIndex);
 }
 
-int CDopelgangersLibrary::length()
+int CDopelgangersLibrary::length() const
 {
     return _booksList.length();
+}
+
+int CDopelgangersLibrary::totalLength() const
+{
+    int result = 0;
+    foreach (const auto &item, _booksList)
+    {
+        result += item.length();
+    }
+
+    return result;
 }
 
 QStringList CDopelgangersLibrary::books()
@@ -108,7 +119,7 @@ QStringList CDopelgangersLibrary::duplicatesByIndex(const int index)
     return QStringList();
 }
 
-void CDopelgangersLibrary::normalize(const int booksListIndex, const int trueBookIndex)
+void CDopelgangersLibrary::normalize(const int booksListIndex, const int trueBookIndex = 0)
 {
     auto &currentBookList = at(booksListIndex);
     auto trueBookFullPath = currentBookList.at(trueBookIndex).fullPath();
@@ -138,6 +149,40 @@ void CDopelgangersLibrary::normalize()
     {
         normalize(i);
     }
+}
+
+QStringList CDopelgangersLibrary::lookForDuplicates(const int booksListIndex, const int trueBookIndex = 0)
+{
+    QStringList result;
+
+    auto &currentBookList = at(booksListIndex);
+    auto trueBookFullPath = currentBookList.at(trueBookIndex).fullPath();
+
+    for(int i = currentBookList.length() - 1; i > -1; --i)
+    {
+        if(i == trueBookIndex)
+        {
+            continue;
+        }
+
+        CBook currentBook = currentBookList.at(i);
+
+        result << currentBook.fullPath();
+    }
+
+    return result;
+}
+
+QStringList CDopelgangersLibrary::lookForDuplicates()
+{
+    QStringList result;
+
+    for(int i = 0; i < _booksList.length(); ++i)
+    {
+        lookForDuplicates(i);
+    }
+
+    return result;
 }
 
 void CDopelgangersLibrary::deleteFile(const QString &filename)

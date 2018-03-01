@@ -18,6 +18,8 @@ public:
     CBook(const int id, const QString &name, const QString &fullPath);
     ~CBook();
 
+    CBook& operator= (const CBook& rValue);
+
     int id() const;
     QString name() const;
     QString fullPath() const;

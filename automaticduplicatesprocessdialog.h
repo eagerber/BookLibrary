@@ -3,6 +3,10 @@
 
 #include <QDialog>
 
+#include <QStandardItemModel>
+
+#include "cdopelgangerslibrary.h"
+
 namespace Ui {
 class AutomaticDuplicatesProcessDialog;
 }
@@ -17,6 +21,9 @@ public:
 
 private:
     Ui::AutomaticDuplicatesProcessDialog *ui;
+
+    QStandardItemModel *model;
+    CDopelgangersLibrary *_library;
 };
 
 #endif // AUTOMATICDUPLICATESPROCESSDIALOG_H

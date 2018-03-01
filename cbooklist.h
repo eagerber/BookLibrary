@@ -17,7 +17,7 @@ public:
     CBookList(const int id, const QString &name, const QString &fullPath);
 
     void addDuplicate(const CBook &duplicate);
-    CBook& at(const int index);
+    const CBook& at(const int index) const;
 
     int length() const;
 
