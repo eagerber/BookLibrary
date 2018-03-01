@@ -60,6 +60,7 @@ private:
     void saveAsDb();
     void createNewDb();
     void scanFolder();
+    void removeIdenticalRows();
     void processFolders(const QStringList &dirs, const QStringList &maskList);
     void processFolder(const QString &path, const QStringList &maskList);
 

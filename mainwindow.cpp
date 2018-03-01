@@ -32,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _ui->addRowBtn->setEnabled(false);
     _ui->menuDuplicates->setEnabled(false);
 
+    // temporary
+    _ui->actionAutomatic_process->setEnabled(false);
+
     _extensionList << "pdf" << "djvu" << "doc" << "docx" << "fb2";
 
     _ui->progressBar->show();
@@ -282,8 +285,19 @@ void MainWindow::scanFolder()
 
     processFolders(dirsForScanning, maskList);
 
+    removeIdenticalRows();
+
     _ui->progressBar->setValue(_ui->progressBar->maximum());
     _ui->progressBar->hide();
+}
+
+void MainWindow::removeIdenticalRows()
+{
+    QSqlQuery query;
+    query.exec(QString("DELETE FROM Catalog WHERE rowid NOT IN (SELECT min(rowid) FROM Catalog GROUP BY md5, size, fullpath, name, extension);"));
+
+    query.clear();
+    _databaseModel->select();
 }
 
 void MainWindow::stepProgress()
