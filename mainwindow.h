@@ -52,6 +52,8 @@ private slots:
 
     void on_actionAutomatic_process_triggered();
 
+    void onFilter();
+
 private:
     void initModel();
     void resizeTableView();

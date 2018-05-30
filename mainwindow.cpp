@@ -43,6 +43,10 @@ MainWindow::MainWindow(QWidget *parent) :
     _userProfileDesktop = QString(environment.value("userprofile") + "\\Desktop");
     _allUserProfileDesktop = QString(environment.value("allusersprofile") + "\\Desktop");
     _publicDesktop = QString(environment.value("public") + "\\Desktop");
+
+    connect(_ui->fullPathFilterLineEdit, SIGNAL(returnPressed()), this, SLOT(onFilter()));
+    connect(_ui->nameFilterLineEdit, SIGNAL(returnPressed()), this, SLOT(onFilter()));
+    connect(_ui->extensionFilterLineEdit, SIGNAL(returnPressed()), this, SLOT(onFilter()));
 }
 
 void MainWindow::deleteRow()
@@ -70,6 +74,7 @@ void MainWindow::deleteRow()
 
 MainWindow::~MainWindow()
 {
+    _databaseModel->setFilter("");
     _database.close();
     delete _databaseModel;
     delete _ui;
@@ -493,4 +498,40 @@ void MainWindow::on_actionAutomatic_process_triggered()
     //library.normalize();
 
     _databaseModel->select();
+}
+
+void MainWindow::onFilter()
+{
+    QString fullPathFilter = _ui->fullPathFilterLineEdit->text();
+    QString nameFilter = _ui->nameFilterLineEdit->text();
+    QString extensionFilter = _ui->extensionFilterLineEdit->text();
+
+    if(fullPathFilter.isEmpty() && nameFilter.isEmpty() && extensionFilter.isEmpty())
+    {
+        _databaseModel->setFilter("");
+        return;
+    }
+
+    QString filter = "";
+
+    QString filterTemplate = QString("%1 LIKE '\%%2\%'");
+    QString andFilterTemplate = QString(" AND %1 LIKE '\%%2\%'");
+    if(!fullPathFilter.isEmpty())
+    {
+        filter = filterTemplate.arg("FullPath").arg(fullPathFilter);
+
+        filterTemplate = andFilterTemplate;
+    }
+    if(!nameFilter.isEmpty())
+    {
+        filter = filter + filterTemplate.arg("Name").arg(nameFilter);
+
+        filterTemplate = andFilterTemplate;
+    }
+    if(!extensionFilter.isEmpty())
+    {
+        filter = filter + filterTemplate.arg("Extension").arg(extensionFilter);
+    }
+
+    _databaseModel->setFilter(filter);
 }

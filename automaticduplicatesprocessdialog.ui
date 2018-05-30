@@ -24,7 +24,17 @@
       </widget>
      </item>
      <item>
-      <widget class="QTreeView" name="treeView"/>
+      <widget class="QTreeView" name="treeView">
+       <property name="dragEnabled">
+        <bool>true</bool>
+       </property>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::DragDrop</enum>
+       </property>
+       <property name="defaultDropAction">
+        <enum>Qt::ActionMask</enum>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="automaticDeleteCopiesBtn">
