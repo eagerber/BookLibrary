@@ -1,0 +1,17 @@
+INPUT(
+./..\release\.obj\main.o
+./..\release\.obj\mainwindow.o
+./..\release\.obj\settingswindow.o
+./..\release\.obj\findduplicatesdialog.o
+./..\release\.obj\automaticduplicatesprocessdialog.o
+./..\release\.obj\cdopelgangerslibrary.o
+./..\release\.obj\cbook.o
+./..\release\.obj\cbooklist.o
+./..\release\.obj\moc_mainwindow.o
+./..\release\.obj\moc_settingswindow.o
+./..\release\.obj\moc_findduplicatesdialog.o
+./..\release\.obj\moc_automaticduplicatesprocessdialog.o
+./..\release\.obj\moc_cdopelgangerslibrary.o
+./..\release\.obj\moc_cbook.o
+./..\release\.obj\moc_cbooklist.o
+);
