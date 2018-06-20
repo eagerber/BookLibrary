@@ -4,6 +4,7 @@
 #include <QString>
 
 class CDatabasePimpl;
+class QSqlDatabase;
 
 class CDatabase
 {
@@ -11,6 +12,7 @@ public:
     CDatabase();
     ~CDatabase();
 
+    QSqlDatabase& instance();
     void open(const QString filename);
     void close();
 

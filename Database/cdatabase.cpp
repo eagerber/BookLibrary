@@ -120,6 +120,11 @@ CDatabase::~CDatabase()
     delete _pimpl;
 }
 
+QSqlDatabase& CDatabase::instance()
+{
+    return _pimpl->database();
+}
+
 void CDatabase::open(const QString filename)
 {
     _pimpl->openDatabase(filename);

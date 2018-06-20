@@ -91,7 +91,8 @@ compiler_rcc_make_all: ../debug/tests/.rcc/qrc_resources.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) ..\debug\tests\.rcc\qrc_resources.cpp
 ../debug/tests/.rcc/qrc_resources.cpp: resources.qrc \
-		../../../bin/Qt/5.8/mingw53_32/bin/rcc.exe
+		../../../bin/Qt/5.8/mingw53_32/bin/rcc.exe \
+		TestDatabase.sqlite
 	C:\Evgenii\bin\Qt\5.8\mingw53_32\bin\rcc.exe -name resources resources.qrc -o ..\debug\tests\.rcc\qrc_resources.cpp
 
 compiler_moc_predefs_make_all: ../debug/tests/.moc/moc_predefs.h
