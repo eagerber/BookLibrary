@@ -9,19 +9,32 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-Release:DESTDIR = ../release/tests
-Release:OBJECTS_DIR = ../release/tests/.obj
-Release:MOC_DIR = ../release/tests/.moc
-Release:RCC_DIR = ../release/tests/.rcc
-Release:UI_DIR = ../release/tests/.ui
+INCLUDEPATH += ../Database
 
-Debug:DESTDIR = ../debug/tests
-Debug:OBJECTS_DIR = ../debug/tests/.obj
-Debug:MOC_DIR = ../debug/tests/.moc
-Debug:RCC_DIR = ../debug/tests/.rcc
-Debug:UI_DIR = ../debug/tests/.ui
+debug
+{
+    DESTDIR = ../debug/tests
+    OBJECTS_DIR = ../debug/tests/.obj
+    MOC_DIR = ../debug/tests/.moc
+    RCC_DIR = ../debug/tests/.rcc
+    UI_DIR = ../debug/tests/.ui
 
-SOURCES += main.cpp
+    LIBS += -L../debug/ -lDatabase
+}
+
+release
+{
+    DESTDIR = ../release/tests
+    OBJECTS_DIR = ../release/tests/.obj
+    MOC_DIR = ../release/tests/.moc
+    RCC_DIR = ../release/tests/.rcc
+    UI_DIR = ../release/tests/.ui
+
+    LIBS += -L../release/ -lDatabase
+}
+
+SOURCES += \
+    cdatabaseadaptertests.cpp
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

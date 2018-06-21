@@ -49,6 +49,11 @@ CBook& CBook::operator= (const CBook& rValue)
     return *this;
 }
 
+bool CBook::operator== (const CBook& rValue)
+{
+    return _id == rValue._id;
+}
+
 int CBook::id() const
 {
     return _id;

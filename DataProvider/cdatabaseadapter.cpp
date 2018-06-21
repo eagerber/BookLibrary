@@ -17,7 +17,7 @@ CDatabaseAdapter::~CDatabaseAdapter()
     delete _db;
 }
 
-QList<CBook> CDatabaseAdapter::ReadAll()
+QList<CBook> CDatabaseAdapter::readAll()
 {
     QSqlQuery selectQuery(_db->instance());
     selectQuery.prepare("SELECT Id, FullPath, Name, Extension, Size, MD5 FROM Catalog ORDER BY Id;");
@@ -38,27 +38,11 @@ QList<CBook> CDatabaseAdapter::ReadAll()
     return result;
 }
 
-void CDatabaseAdapter::Insert(const CBook &book)
+void CDatabaseAdapter::insert(const CBook &book)
 {
-    QSqlQuery insertQuery(db.instance());
+    QSqlQuery insertQuery(_db->instance());
     insertQuery.prepare("INSERT INTO Catalog (Id, FullPath, Name, Extension, Size, MD5) VALUES(:Id, :FullPath,:Name,:Extension,:Size, :MD5);");
 
-    internalInsert(insertQuery, book);
-}
-
-void CDatabaseAdapter::InsertAll(const QList<CBook> &books)
-{
-    QSqlQuery insertQuery(db.instance());
-    insertQuery.prepare("INSERT INTO Catalog (Id, FullPath, Name, Extension, Size, MD5) VALUES(:Id, :FullPath,:Name,:Extension,:Size, :MD5);");
-
-    foreach (auto& item, books)
-    {
-        internalInsert(insertQuery, book);
-    }
-}
-
-void CDatabaseAdapter::internalInsert(QSqlQuery &query, const CBook& book)
-{
     insertQuery.bindValue(":Id", book.id());
     insertQuery.bindValue(":FullPath", book.fullPath());
     insertQuery.bindValue(":Name", book.name());
@@ -68,3 +52,43 @@ void CDatabaseAdapter::internalInsert(QSqlQuery &query, const CBook& book)
 
     insertQuery.exec();
 }
+
+void CDatabaseAdapter::update(const CBook &book)
+{
+    QSqlQuery updateQuery(_db->instance());
+    auto updateQueryString = QString("UPDATE Catalog SET FullPath = :FullPath, Name = :Name, Extension = :Extension, Size = :Size, MD5 = :MD5 WHERE Id = %1;").arg(book.id());
+    updateQuery.prepare(updateQueryString);
+
+    updateQuery.bindValue(":FullPath", book.fullPath());
+    updateQuery.bindValue(":Name", book.name());
+    updateQuery.bindValue(":Extension", book.extension());
+    updateQuery.bindValue(":Size", book.size());
+    updateQuery.bindValue(":MD5", book.md5());
+
+    updateQuery.exec();
+}
+
+void CDatabaseAdapter::saveChanges(const QList<CBook> &books)
+{
+    auto booksInDatabase = readAll();
+
+    foreach (auto& item, books)
+    {
+        if(booksInDatabase.contains(item))
+        {
+            update(item);
+        }
+        else
+        {
+            insert(item);
+        }
+    }
+}
+
+
+
+
+
+
+
+

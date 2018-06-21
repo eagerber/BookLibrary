@@ -30,6 +30,7 @@ public:
     ~CBook();
 
     CBook& operator= (const CBook& rValue);
+    bool operator== (const CBook& rValue);
 
     int id() const;
     QString name() const;

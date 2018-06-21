@@ -14,14 +14,14 @@ public:
     CDatabaseAdapter(QString filename);
     ~CDatabaseAdapter();
 
-    QList<CBook> ReadAll();
+    QList<CBook> readAll();
 
-    void Insert(const CBook &book);
-    void InsertAll(const QList<CBook> &books);
+    void insert(const CBook &book);
+    void update(const CBook &book);
+
+    void saveChanges(const QList<CBook> &books);
 
 private:
-    void internalInsert(QSqlQuery &query, const CBook& book);
-
     CDatabase *_db;
 };
 
