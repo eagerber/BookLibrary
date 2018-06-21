@@ -392,6 +392,7 @@ compiler_moc_source_clean:
 		../../../bin/Qt/5.8/mingw53_32/include/QtSql/qsqlquery.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtSql/QSqlError \
 		../../../bin/Qt/5.8/mingw53_32/include/QtSql/qsqlerror.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QUuid \
 		../Database/cdatabase.h \
 		cdatabasetests.cpp \
 		../debug/tests/.moc/moc_predefs.h \
@@ -696,6 +697,7 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_sourc
 		../../../bin/Qt/5.8/mingw53_32/include/QtSql/qsqlquery.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtSql/QSqlError \
 		../../../bin/Qt/5.8/mingw53_32/include/QtSql/qsqlerror.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QUuid \
 		../Database/cdatabase.h \
 		../debug/tests/.moc/cdatabasetests.moc
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ..\debug\tests\.obj\cdatabasetests.o cdatabasetests.cpp

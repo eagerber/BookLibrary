@@ -4,19 +4,25 @@
 #include <QList>
 
 #include "cbook.h"
-#include "cdatabase.h"
+
+class CDatabase;
+class QSqlQuery;
 
 class CDatabaseAdapter
 {
 public:
-    CDatabaseAdapter();
+    CDatabaseAdapter(QString filename);
     ~CDatabaseAdapter();
 
-    QList<CBook> books();
+    QList<CBook> ReadAll();
+
+    void Insert(const CBook &book);
+    void InsertAll(const QList<CBook> &books);
 
 private:
-    QString _filename;
-    CDatabase _db;
+    void internalInsert(QSqlQuery &query, const CBook& book);
+
+    CDatabase *_db;
 };
 
 #endif // DATABASEADAPTER_H

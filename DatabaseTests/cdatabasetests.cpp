@@ -90,7 +90,6 @@ void CDatabaseTests::execQuery()
     CDatabase db;
     db.open(filename);
 
-
     QList<int> expectedId;
     QList<QString> expectedFullPath;
     QList<QString> expectedName;
@@ -110,7 +109,7 @@ void CDatabaseTests::execQuery()
     }
 
     QSqlQuery insertQuery(db.instance());
-    insertQuery.prepare("INSERT INTO Catalog (Id, FullPath, Name, Extension, Size, MD5) VALUES(:Id, :FullPath,:Name,:Extension,:Size, :MD5);");
+    insertQuery.prepare("INSERT INTO Catalog (Id, FullPath, Name, Extension, Size, MD5) VALUES(:Id, :FullPath,:Name,:Extension,:Size,:MD5);");
 
     for(int i = 0; i < expectedRecordsCount; ++i)
     {
