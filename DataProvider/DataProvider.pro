@@ -9,20 +9,34 @@ CONFIG -= app_bundle
 
 TEMPLATE = lib
 
-Release:DESTDIR = ../release
-Release:OBJECTS_DIR = ../release/.obj
-Release:MOC_DIR = ../release/.moc
-Release:RCC_DIR = ../release/.rcc
-Release:UI_DIR = ../release/.ui
+INCLUDEPATH += ../Database
+INCLUDEPATH += ../Common
 
-Debug:DESTDIR = ../debug
-Debug:OBJECTS_DIR = ../debug/.obj
-Debug:MOC_DIR = ../debug/.moc
-Debug:RCC_DIR = ../debug/.rcc
-Debug:UI_DIR = ../debug/.ui
+debug
+{
+    DESTDIR = ../debug
+    OBJECTS_DIR = ../debug/.obj
+    MOC_DIR = ../debug/.moc
+    RCC_DIR = ../debug/.rcc
+    UI_DIR = ../debug/.ui
+
+    LIBS += -L../debug/ -lDatabase
+    LIBS += -L../debug/ -lCommon
+}
+
+release
+{
+    DESTDIR = ../release
+    OBJECTS_DIR = ../release/.obj
+    MOC_DIR = ../release/.moc
+    RCC_DIR = ../release/.rcc
+    UI_DIR = ../release/.ui
+
+    LIBS += -L../debug/ -lDatabase
+    LIBS += -L../release/ -lCommon
+}
 
 SOURCES += main.cpp \
-    cbook.cpp \
     cdatabase.cpp \
     cdatabaseadapter.cpp
 
@@ -38,6 +52,5 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 HEADERS += \
-    cbook.h \
     cdatabase.h \
     cdatabaseadapter.h

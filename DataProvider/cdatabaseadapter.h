@@ -9,7 +9,7 @@
 class CDatabaseAdapter
 {
 public:
-    CDatabaseAdapter(QString filename);
+    CDatabaseAdapter();
     ~CDatabaseAdapter();
 
     QList<CBook> books();

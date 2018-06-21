@@ -1,6 +1,6 @@
 #include "cdatabaseadapter.h"
 
-CDatabaseAdapter::CDatabaseAdapter(QString filename)
+CDatabaseAdapter::CDatabaseAdapter()
 {
     _db = CDatabase();
     _filename = filename;
