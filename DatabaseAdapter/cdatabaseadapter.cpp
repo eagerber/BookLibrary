@@ -4,6 +4,7 @@
 #include <QVariant>
 
 #include "cdatabase.h"
+#include "cbook.h"
 
 CDatabaseAdapter::CDatabaseAdapter(QString filename)
 {
@@ -21,6 +22,7 @@ QList<CBook> CDatabaseAdapter::readAll()
 {
     QSqlQuery selectQuery(_db->instance());
     selectQuery.prepare("SELECT Id, FullPath, Name, Extension, Size, MD5 FROM Catalog ORDER BY Id;");
+    selectQuery.exec();
 
     QList<CBook> result;
     while(selectQuery.next())
@@ -32,7 +34,7 @@ QList<CBook> CDatabaseAdapter::readAll()
         auto size      = selectQuery.value(4).toInt();
         auto md5       = selectQuery.value(5).toByteArray();
 
-        result.push_back(CBook(id, fullPath, name, extension, size, md5));
+        result.push_back(CBook(id, name, fullPath, extension, size, md5));
     }
 
     return result;

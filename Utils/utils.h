@@ -3,6 +3,8 @@
 
 #include "utils_global.h"
 
+#include <QString>
+
 class UTILSSHARED_EXPORT Utils
 {
 

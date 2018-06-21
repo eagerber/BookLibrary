@@ -1,5 +1,6 @@
 #include "utils.h"
 
+#include <QUuid>
 
 Utils::Utils()
 {

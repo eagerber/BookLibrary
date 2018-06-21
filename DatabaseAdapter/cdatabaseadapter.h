@@ -3,10 +3,9 @@
 
 #include <QList>
 
-#include "cbook.h"
-
 class CDatabase;
 class QSqlQuery;
+class CBook;
 
 class CDatabaseAdapter
 {
