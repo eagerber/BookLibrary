@@ -7,15 +7,13 @@
 #include <QDebug>
 
 #include "cdatabase.h"
+#include "utils.h"
 
 
 class CDatabaseTests: public QObject
 {
     Q_OBJECT
 private slots:
-//    void toUpper_data();
-//    void toUpper();
-
     void openDatabase();
     void createDatabase();
     void createDatabaseException();
@@ -25,32 +23,9 @@ private:
     QString UniqueDatabaseName();
 };
 
-//void CDatabaseTests::toUpper_data()
-//{
-//    QTest::addColumn<QString>("string");
-//    QTest::addColumn<QString>("result");
-//
-//    QTest::newRow("all lower") << "hello" << "HELLO";
-//    QTest::newRow("mixed")     << "Hello" << "HELLO";
-//    QTest::newRow("all upper") << "HELLO" << "HELLO";
-//
-//    QSKIP("Skip it");
-//}
-//
-//void CDatabaseTests::toUpper()
-//{
-//    QFETCH(QString, string);
-//    QFETCH(QString, result);
-//
-//    QBENCHMARK
-//    {
-//    QCOMPARE(string.toUpper(), result);
-//    }
-//}
-
 void CDatabaseTests::openDatabase()
 {
-    QString filename = UniqueDatabaseName();
+    QString filename = Utils::UniqueDatabaseName();
 
     QFile::copy(":/resource/TestDatabase.sqlite", filename);
     QFile::setPermissions(filename, QFile::ReadOwner | QFile::WriteOwner);
@@ -64,7 +39,7 @@ void CDatabaseTests::openDatabase()
 
 void CDatabaseTests::createDatabase()
 {
-    QString filename = UniqueDatabaseName();
+    QString filename = Utils::UniqueDatabaseName();
 
     CDatabase db;
     db.open(filename);
@@ -85,7 +60,7 @@ void CDatabaseTests::createDatabaseException()
 
 void CDatabaseTests::execQuery()
 {
-    QString filename = UniqueDatabaseName();
+    QString filename = Utils::UniqueDatabaseName();
 
     CDatabase db;
     db.open(filename);
@@ -167,13 +142,6 @@ void CDatabaseTests::execQuery()
     QFile::remove(filename);
 }
 
-
-QString CDatabaseTests::UniqueDatabaseName()
-{
-    QString uuid = QUuid::createUuid().toString();
-    uuid = uuid.mid(1, uuid.length() - 2);
-    return uuid + ".sqlite";
-}
 
 QTEST_MAIN(CDatabaseTests)
 #include "cdatabasetests.moc"

@@ -1,40 +1,23 @@
 #include <QCoreApplication>
 
 #include <QtTest/QtTest>
+#include <QFile>
+
+#include "cdatabaseadapter.h"
 
 class CDatabaseAdapterTests: public QObject
 {
     Q_OBJECT
 private slots:
-    void toUpper_data();
-    void toUpper();
+    void create();
 };
 
-void CDatabaseAdapterTests::toUpper_data()
+void CDatabaseAdapterTests::constructor()
 {
-    QTest::addColumn<QString>("string");
-    QTest::addColumn<QString>("result");
+    QString filename = "TestDatabase.sqlite";
+    CDatabaseAdapter databaseAdapter(filename);
 
-    QTest::newRow("all lower") << "hello" << "HELLO";
-    QTest::newRow("mixed")     << "Hello" << "HELLO";
-    QTest::newRow("all upper") << "HELLO" << "HELLO";
-
-}
-
-void CDatabaseAdapterTests::toUpper()
-{
-    QFETCH(QString, string);
-    QFETCH(QString, result);
-
-    if(string == "HELLO")
-    {
-        QSKIP("");
-    };
-
-    QBENCHMARK
-    {
-    QCOMPARE(string.toUpper(), result);
-    }
+    QFile::remove(filename);
 }
 
 QTEST_MAIN(CDatabaseAdapterTests)

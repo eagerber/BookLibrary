@@ -14,10 +14,10 @@ CXX           = g++
 DEFINES       = -DUNICODE -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_TESTLIB_LIB -DQT_CORE_LIB -DQT_TESTCASE_BUILDDIR="\"C:/Evgenii/test/BL/DataProviderTests\""
 CFLAGS        = -pipe -fno-keep-inline-dllexport -g -Wall -Wextra $(DEFINES)
 CXXFLAGS      = -pipe -fno-keep-inline-dllexport -g -std=gnu++11 -frtti -Wall -Wextra -fexceptions -mthreads $(DEFINES)
-INCPATH       = -I. -I..\Database -I..\..\..\bin\Qt\5.8\mingw53_32\include -I..\..\..\bin\Qt\5.8\mingw53_32\include\QtTest -I..\..\..\bin\Qt\5.8\mingw53_32\include\QtCore -I..\debug\tests\.moc -I..\..\..\bin\Qt\5.8\mingw53_32\mkspecs\win32-g++ 
+INCPATH       = -I. -I..\DatabaseAdapter -I..\Utils -I..\..\..\bin\Qt\5.8\mingw53_32\include -I..\..\..\bin\Qt\5.8\mingw53_32\include\QtTest -I..\..\..\bin\Qt\5.8\mingw53_32\include\QtCore -I..\debug\tests\.moc -I..\..\..\bin\Qt\5.8\mingw53_32\mkspecs\win32-g++ 
 LINKER      =        g++
 LFLAGS        =        -Wl,-subsystem,console -mthreads
-LIBS        =        -L..\debug -L..\release -lDatabase -LC:\Evgenii\bin\Qt\5.8\mingw53_32\lib C:\Evgenii\bin\Qt\5.8\mingw53_32\lib\libQt5Testd.a C:\Evgenii\bin\Qt\5.8\mingw53_32\lib\libQt5Cored.a 
+LIBS        =        -L..\debug -L..\release -lDatabase -lUtils -LC:\Evgenii\bin\Qt\5.8\mingw53_32\lib C:\Evgenii\bin\Qt\5.8\mingw53_32\lib\libQt5Testd.a C:\Evgenii\bin\Qt\5.8\mingw53_32\lib\libQt5Cored.a 
 QMAKE         = C:\Evgenii\bin\Qt\5.8\mingw53_32\bin\qmake.exe
 IDC           = idc
 IDL           = midl
@@ -379,10 +379,12 @@ compiler_moc_source_clean:
 		../../../bin/Qt/5.8/mingw53_32/include/QtWidgets/QSizePolicy \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QMetaEnum \
 		../../../bin/Qt/5.8/mingw53_32/include/QtTest/qttestversion.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QFile \
+		../DatabaseAdapter/cdatabaseadapter.h \
 		cdatabaseadaptertests.cpp \
 		../debug/tests/.moc/moc_predefs.h \
 		../../../bin/Qt/5.8/mingw53_32/bin/moc.exe
-	C:\Evgenii\bin\Qt\5.8\mingw53_32\bin\moc.exe $(DEFINES) --include ../debug/tests/.moc/moc_predefs.h -IC:/Evgenii/bin/Qt/5.8/mingw53_32/mkspecs/win32-g++ -IC:/Evgenii/test/BL/DataProviderTests -IC:/Evgenii/test/BL/Database -IC:/Evgenii/bin/Qt/5.8/mingw53_32/include -IC:/Evgenii/bin/Qt/5.8/mingw53_32/include/QtTest -IC:/Evgenii/bin/Qt/5.8/mingw53_32/include/QtCore -IC:/Evgenii/bin/Qt/Tools/mingw530_32/lib/gcc/i686-w64-mingw32/5.3.0/include -IC:/Evgenii/bin/Qt/Tools/mingw530_32/lib/gcc/i686-w64-mingw32/5.3.0/include-fixed -IC:/Evgenii/bin/Qt/Tools/mingw530_32/i686-w64-mingw32/include -IC:/Evgenii/bin/Qt/Tools/mingw530_32/i686-w64-mingw32/include/c++ -IC:/Evgenii/bin/Qt/Tools/mingw530_32/i686-w64-mingw32/include/c++/i686-w64-mingw32 -IC:/Evgenii/bin/Qt/Tools/mingw530_32/i686-w64-mingw32/include/c++/backward cdatabaseadaptertests.cpp -o ..\debug\tests\.moc\cdatabaseadaptertests.moc
+	C:\Evgenii\bin\Qt\5.8\mingw53_32\bin\moc.exe $(DEFINES) --include ../debug/tests/.moc/moc_predefs.h -IC:/Evgenii/bin/Qt/5.8/mingw53_32/mkspecs/win32-g++ -IC:/Evgenii/test/BL/DataProviderTests -IC:/Evgenii/test/BL/DatabaseAdapter -IC:/Evgenii/test/BL/Utils -IC:/Evgenii/bin/Qt/5.8/mingw53_32/include -IC:/Evgenii/bin/Qt/5.8/mingw53_32/include/QtTest -IC:/Evgenii/bin/Qt/5.8/mingw53_32/include/QtCore -IC:/Evgenii/bin/Qt/Tools/mingw530_32/lib/gcc/i686-w64-mingw32/5.3.0/include -IC:/Evgenii/bin/Qt/Tools/mingw530_32/lib/gcc/i686-w64-mingw32/5.3.0/include-fixed -IC:/Evgenii/bin/Qt/Tools/mingw530_32/i686-w64-mingw32/include -IC:/Evgenii/bin/Qt/Tools/mingw530_32/i686-w64-mingw32/include/c++ -IC:/Evgenii/bin/Qt/Tools/mingw530_32/i686-w64-mingw32/include/c++/i686-w64-mingw32 -IC:/Evgenii/bin/Qt/Tools/mingw530_32/i686-w64-mingw32/include/c++/backward cdatabaseadaptertests.cpp -o ..\debug\tests\.moc\cdatabaseadaptertests.moc
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -676,6 +678,8 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_source_clean
 		../../../bin/Qt/5.8/mingw53_32/include/QtWidgets/QSizePolicy \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QMetaEnum \
 		../../../bin/Qt/5.8/mingw53_32/include/QtTest/qttestversion.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QFile \
+		../DatabaseAdapter/cdatabaseadapter.h \
 		../debug/tests/.moc/cdatabaseadaptertests.moc
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ..\debug\tests\.obj\cdatabaseadaptertests.o cdatabaseadaptertests.cpp
 

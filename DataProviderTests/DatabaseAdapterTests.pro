@@ -9,7 +9,8 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-INCLUDEPATH += ../Database
+INCLUDEPATH += ../DatabaseAdapter
+INCLUDEPATH += ../Utils
 
 debug
 {
@@ -20,6 +21,7 @@ debug
     UI_DIR = ../debug/tests/.ui
 
     LIBS += -L../debug/ -lDatabase
+    LIBS += -L../debug/ -lUtils
 }
 
 release
@@ -31,6 +33,7 @@ release
     UI_DIR = ../release/tests/.ui
 
     LIBS += -L../release/ -lDatabase
+    LIBS += -L../release/ -lUtils
 }
 
 SOURCES += \
