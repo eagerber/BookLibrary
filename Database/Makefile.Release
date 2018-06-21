@@ -188,7 +188,9 @@ compiler_clean: compiler_moc_predefs_clean
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qset.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qcontiguouscache.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qsharedpointer.h \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qsharedpointer_impl.h
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qsharedpointer_impl.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QDir \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qdir.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ..\release\.obj\cdatabase.o cdatabase.cpp
 
 ####### Install

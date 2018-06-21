@@ -2,7 +2,7 @@
 
 #include <QtTest/QtTest>
 
-class TestQString: public QObject
+class CDatabaseAdapterTests: public QObject
 {
     Q_OBJECT
 private slots:
@@ -10,7 +10,7 @@ private slots:
     void toUpper();
 };
 
-void TestQString::toUpper_data()
+void CDatabaseAdapterTests::toUpper_data()
 {
     QTest::addColumn<QString>("string");
     QTest::addColumn<QString>("result");
@@ -21,7 +21,7 @@ void TestQString::toUpper_data()
 
 }
 
-void TestQString::toUpper()
+void CDatabaseAdapterTests::toUpper()
 {
     QFETCH(QString, string);
     QFETCH(QString, result);
@@ -37,12 +37,5 @@ void TestQString::toUpper()
     }
 }
 
-QTEST_MAIN(TestQString)
-#include "main.moc"
-
-//int main(int argc, char *argv[])
-//{
-//    QCoreApplication a(argc, argv);
-//
-//    return a.exec();
-//}
+QTEST_MAIN(CDatabaseAdapterTests)
+#include "cdatabaseadaptertests.moc"

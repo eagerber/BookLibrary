@@ -196,6 +196,7 @@ Makefile: Database.pro ../../../bin/Qt/5.8/mingw53_32/mkspecs/win32-g++/qmake.co
 		../../../bin/Qt/5.8/mingw53_32/mkspecs/features/qt_config.prf \
 		../../../bin/Qt/5.8/mingw53_32/mkspecs/win32-g++/qmake.conf \
 		../../../bin/Qt/5.8/mingw53_32/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../bin/Qt/5.8/mingw53_32/mkspecs/features/exclusive_builds.prf \
 		../../../bin/Qt/5.8/mingw53_32/mkspecs/features/toolchain.prf \
 		../../../bin/Qt/5.8/mingw53_32/mkspecs/features/default_pre.prf \
@@ -358,6 +359,7 @@ Makefile: Database.pro ../../../bin/Qt/5.8/mingw53_32/mkspecs/win32-g++/qmake.co
 ../../../bin/Qt/5.8/mingw53_32/mkspecs/features/qt_config.prf:
 ../../../bin/Qt/5.8/mingw53_32/mkspecs/win32-g++/qmake.conf:
 ../../../bin/Qt/5.8/mingw53_32/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../bin/Qt/5.8/mingw53_32/mkspecs/features/exclusive_builds.prf:
 ../../../bin/Qt/5.8/mingw53_32/mkspecs/features/toolchain.prf:
 ../../../bin/Qt/5.8/mingw53_32/mkspecs/features/default_pre.prf:

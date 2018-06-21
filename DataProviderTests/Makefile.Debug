@@ -379,7 +379,6 @@ compiler_moc_source_clean:
 		../../../bin/Qt/5.8/mingw53_32/include/QtWidgets/QSizePolicy \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QMetaEnum \
 		../../../bin/Qt/5.8/mingw53_32/include/QtTest/qttestversion.h \
-		../debug/tests/.moc/main.moc \
 		cdatabaseadaptertests.cpp \
 		../debug/tests/.moc/moc_predefs.h \
 		../../../bin/Qt/5.8/mingw53_32/bin/moc.exe
@@ -677,7 +676,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_source_clean
 		../../../bin/Qt/5.8/mingw53_32/include/QtWidgets/QSizePolicy \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QMetaEnum \
 		../../../bin/Qt/5.8/mingw53_32/include/QtTest/qttestversion.h \
-		../debug/tests/.moc/main.moc
+		../debug/tests/.moc/cdatabaseadaptertests.moc
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ..\debug\tests\.obj\cdatabaseadaptertests.o cdatabaseadaptertests.cpp
 
 ####### Install
