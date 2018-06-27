@@ -151,30 +151,26 @@ compiler_clean: compiler_moc_predefs_clean
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qstringlist.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qregexp.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qstringmatcher.h \
-		../Common/cbook.h \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QObject \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qobject.h \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qobjectdefs.h \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qobjectdefs_impl.h \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qcoreevent.h \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qscopedpointer.h \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qmetatype.h \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qvarlengtharray.h \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qcontainerfwd.h \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qobject_impl.h \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QString \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QByteArray \
 		../../../bin/Qt/5.8/mingw53_32/include/QtSql/QSqlQuery \
 		../../../bin/Qt/5.8/mingw53_32/include/QtSql/qsqlquery.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtSql/qtsqlglobal.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtSql/qsqldatabase.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QVariant \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qvariant.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qmetatype.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qvarlengtharray.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qcontainerfwd.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qobjectdefs.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qobjectdefs_impl.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qmap.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qdebug.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qhash.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qtextstream.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qiodevice.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qobject.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qcoreevent.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qscopedpointer.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qobject_impl.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qlocale.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qshareddata.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qvector.h \
@@ -183,7 +179,11 @@ compiler_clean: compiler_moc_predefs_clean
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qcontiguouscache.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qsharedpointer.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qsharedpointer_impl.h \
-		../Database/cdatabase.h
+		../Database/cdatabase.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QString \
+		../Common/cbook.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QObject \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QByteArray
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ..\release\.obj\cdatabaseadapter.o cdatabaseadapter.cpp
 
 ####### Install

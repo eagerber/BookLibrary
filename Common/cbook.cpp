@@ -1,5 +1,10 @@
 #include "cbook.h"
 
+uint qHash(const CBook &val)
+{
+    return ::qHash(val.md5());
+}
+
 CBook::CBook()
 {
 
@@ -49,19 +54,19 @@ CBook& CBook::operator= (const CBook& rValue)
     return *this;
 }
 
-bool CBook::operator== (const CBook& rValue)
-{
-    return _id == rValue._id;
-}
-
-bool CBook::FullMatch(const CBook& rValue) const
+bool CBook::operator== (const CBook& rValue) const
 {
     return _id        == rValue._id &&
            _name      == rValue._name &&
            _fullPath  == rValue._fullPath &&
            _extension == rValue._extension &&
            _size      == rValue._size &&
-           _md5       == rValue._md5;
+           _md5       == rValue._md5;;
+}
+
+bool CBook::HashSumMatch(const CBook& rValue) const
+{
+    return _md5 == rValue._md5;
 }
 
 int CBook::id() const

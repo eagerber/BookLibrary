@@ -4,6 +4,7 @@
 #
 #-------------------------------------------------
 
+QT       += core
 QT       -= gui
 
 TARGET = Common
@@ -32,13 +33,10 @@ release
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
-    cbook.cpp
+    cbook.cpp \
+    clibrary.cpp
 
 HEADERS += \
         common_global.h \ 
-    cbook.h
-
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
+    cbook.h \
+    clibrary.h

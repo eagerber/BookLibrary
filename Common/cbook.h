@@ -5,6 +5,10 @@
 #include <QString>
 #include <QByteArray>
 
+class CBook;
+
+uint qHash(const CBook &val);
+
 class CBook : public QObject
 {
     Q_OBJECT
@@ -30,8 +34,8 @@ public:
     ~CBook();
 
     CBook& operator= (const CBook& rValue);
-    bool operator== (const CBook& rValue);
-    bool FullMatch(const CBook& rValue) const;
+    bool operator== (const CBook& rValue) const;
+    bool HashSumMatch(const CBook& rValue) const;
 
     int id() const;
     QString name() const;
@@ -39,6 +43,7 @@ public:
     QString extension() const;
     int size() const;
     QByteArray md5() const;
+
 
 private:
     int _id;

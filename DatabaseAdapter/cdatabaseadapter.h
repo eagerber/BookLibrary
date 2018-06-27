@@ -6,6 +6,7 @@
 class CDatabase;
 class QSqlQuery;
 class CBook;
+class CLibrary;
 
 class CDatabaseAdapter
 {

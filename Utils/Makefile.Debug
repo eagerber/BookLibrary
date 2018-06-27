@@ -135,7 +135,17 @@ compiler_clean: compiler_moc_predefs_clean
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qglobalstatic.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qmutex.h \
 		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qnumeric.h \
-		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qversiontagging.h
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qversiontagging.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QString \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qstring.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qchar.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qbytearray.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qrefcount.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qnamespace.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qarraydata.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/qstringbuilder.h \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/QUuid \
+		../../../bin/Qt/5.8/mingw53_32/include/QtCore/quuid.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ..\debug\.obj\utils.o utils.cpp
 
 ####### Install

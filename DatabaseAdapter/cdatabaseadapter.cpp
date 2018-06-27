@@ -3,6 +3,8 @@
 #include <QtSql/QSqlQuery>
 #include <QVariant>
 
+#include <algorithm>
+
 #include "cdatabase.h"
 #include "cbook.h"
 
@@ -74,9 +76,15 @@ void CDatabaseAdapter::saveChanges(const QList<CBook> &books)
 {
     auto booksInDatabase = readAll();
 
+
     foreach (auto& item, books)
     {
-        if(booksInDatabase.contains(item))
+        auto it = std::find_if(booksInDatabase.begin(), booksInDatabase.end(), [&] (const CBook &book)
+        {
+            return book.id() == item.id();
+        });
+
+        if(it != booksInDatabase.end())
         {
             update(item);
         }

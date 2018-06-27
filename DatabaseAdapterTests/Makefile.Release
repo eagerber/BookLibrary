@@ -392,6 +392,8 @@ compiler_moc_source_clean:
 		../DatabaseAdapter/cdatabaseadapter.h \
 		../Utils/utils.h \
 		../Utils/utils_global.h \
+		../TestUtils/testutils.h \
+		../TestUtils/testutils_global.h \
 		cdatabaseadaptertests.cpp \
 		../release/tests/.moc/moc_predefs.h \
 		../../../bin/Qt/5.8/mingw53_32/bin/moc.exe
@@ -695,6 +697,8 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_sourc
 		../DatabaseAdapter/cdatabaseadapter.h \
 		../Utils/utils.h \
 		../Utils/utils_global.h \
+		../TestUtils/testutils.h \
+		../TestUtils/testutils_global.h \
 		../release/tests/.moc/cdatabaseadaptertests.moc
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ..\release\tests\.obj\cdatabaseadaptertests.o cdatabaseadaptertests.cpp
 

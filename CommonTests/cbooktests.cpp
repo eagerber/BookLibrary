@@ -8,8 +8,8 @@ class CBookTests: public QObject
 private slots:
     void constructor();
     void assignment();
-    void equalById();
-    void fullMatch();
+    void equal();
+    void HashSumMatch();
     void id();
     void name();
     void fullPath();
@@ -24,7 +24,7 @@ void CBookTests::constructor()
     CBook book2(1, "", "", "", 1, QByteArray());
     CBook book3(book2);
 
-    QVERIFY(book2.FullMatch(book3));
+    QVERIFY(book2.HashSumMatch(book3));
 }
 
 void CBookTests::assignment()
@@ -32,28 +32,25 @@ void CBookTests::assignment()
     CBook book2;
     CBook book3 = book2;
 
-    QVERIFY(book2.FullMatch(book3));
+    QVERIFY(book2.HashSumMatch(book3));
 }
 
-void CBookTests::equalById()
-{
-    CBook book1(1, "", "", "", 1, QByteArray());
-    CBook book2(1, "a", "b", "c", 2, QByteArray());
-
-    QVERIFY(book1 == book2);
-}
-
-void CBookTests::fullMatch()
+void CBookTests::equal()
 {
     CBook book1(1, "a", "b", "c", 1, QByteArray());
     CBook book2(1, "a", "b", "c", 1, QByteArray());
 
-    QVERIFY(book1.FullMatch(book2));
-    QVERIFY(book2.FullMatch(book1));
+    QVERIFY(book1 == book2);
+}
 
-    CBook book3(2, "a", "b", "c", 1, QByteArray());
-    QVERIFY(!book2.FullMatch(book3));
-    QVERIFY(!book3.FullMatch(book2));
+void CBookTests::HashSumMatch()
+{
+    QByteArray hashSum(1, 255);
+    CBook book1(1, "a", "b", "c", 1, hashSum);
+    CBook book2(1, "a", "b", "c", 1, hashSum);
+
+    QVERIFY(book1.HashSumMatch(book2));
+    QVERIFY(book2.HashSumMatch(book1));
 }
 
 void CBookTests::id()
