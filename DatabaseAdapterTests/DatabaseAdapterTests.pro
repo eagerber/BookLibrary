@@ -12,6 +12,7 @@ TEMPLATE = app
 INCLUDEPATH += ../Common
 INCLUDEPATH += ../DatabaseAdapter
 INCLUDEPATH += ../Utils
+INCLUDEPATH += ../TestUtils
 
 debug
 {
@@ -24,6 +25,7 @@ debug
     LIBS += -L../debug/ -lCommon
     LIBS += -L../debug/ -lDatabaseAdapter
     LIBS += -L../debug/ -lUtils
+    LIBS += -L../debug/ -lTestUtils
 }
 
 release
@@ -37,6 +39,7 @@ release
     LIBS += -L../release/ -lCommon
     LIBS += -L../release/ -lDatabaseAdapter
     LIBS += -L../release/ -lUtils
+    LIBS += -L../release/ -lTestUtils
 }
 
 SOURCES += \
