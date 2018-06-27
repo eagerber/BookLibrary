@@ -13,6 +13,7 @@ public:
     TestUtils();
 
     static void Compare(const QList<CBook> &expected, const QList<CBook> &actual);
+    static void Compare(const QList<QList<CBook>> &expected, const QList<QList<CBook>> &actual);
 };
 
 #endif // TESTUTILS_H

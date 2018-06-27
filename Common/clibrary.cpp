@@ -36,7 +36,10 @@ QList<QList<CBook>> CLibrary::allDoppelgangers()
     foreach (const auto& item, uniqueBooks)
     {
         auto currentDoppelgangers = doppelgangers(item);
-        result.push_back(currentDoppelgangers);
+        if(currentDoppelgangers.length() > 1)
+        {
+            result.push_back(currentDoppelgangers);
+        }
     }
 
     return result;

@@ -40,8 +40,31 @@ void CLibraryTests::doppelgangers()
 
 void CLibraryTests::allDoppelgangers()
 {
-    CLibrary library;
-    library.add(CBook());
+    QList<QByteArray> hash;
+    QList<QList<CBook>> expectedDoppelgangers;
+
+    for(int i = 0; i < 2; ++i)
+    {
+        hash.push_back(QUuid::createUuid().toByteArray());
+        expectedDoppelgangers.push_back(QList<CBook>());
+        expectedDoppelgangers[i].push_back(CBook(1, "a1", "b1", "c1", 1, hash[i]));
+        expectedDoppelgangers[i].push_back(CBook(2, "a2", "b2", "c2", 2, hash[i]));
+        expectedDoppelgangers[i].push_back(CBook(3, "a3", "b3", "c3", 3, hash[i]));
+    }
+
+    CLibrary library = filledLibrarywithPrefix("Some", 100);
+
+    foreach (const auto& list, expectedDoppelgangers)
+    {
+        foreach (const auto& item, list)
+        {
+            library.add(item);
+        }
+    }
+
+    QList<QList<CBook>> actualDoppelgangers = library.allDoppelgangers();
+
+    TestUtils::Compare(expectedDoppelgangers, actualDoppelgangers);
 }
 
 CLibrary CLibraryTests::filledLibrarywithPrefix(QString prefix, int count)
