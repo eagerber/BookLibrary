@@ -10,7 +10,9 @@ public:
     CLibrary();
 
     void add(const CBook& book);
+
     QList<CBook> doppelgangers(const CBook& book);
+
     QList<QList<CBook>> allDoppelgangers();
 
 

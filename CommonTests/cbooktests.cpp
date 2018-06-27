@@ -1,22 +1,6 @@
-#include <QtTest/QtTest>
+#include "cbooktests.h"
 
 #include "cbook.h"
-
-class CBookTests: public QObject
-{
-    Q_OBJECT
-private slots:
-    void constructor();
-    void assignment();
-    void equal();
-    void HashSumMatch();
-    void id();
-    void name();
-    void fullPath();
-    void extension();
-    void size();
-    void md5();
-};
 
 void CBookTests::constructor()
 {
@@ -100,7 +84,3 @@ void CBookTests::md5()
 
     QCOMPARE(expectedMd5, book.md5());
 }
-
-
-QTEST_MAIN(CBookTests)
-#include "cbooktests.moc"

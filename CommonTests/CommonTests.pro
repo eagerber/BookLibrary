@@ -15,6 +15,7 @@ TEMPLATE = app
 DEFINES += COMMONTESTS_LIBRARY
 
 INCLUDEPATH += ../Common
+INCLUDEPATH += ../TestUtils
 
 debug
 {
@@ -25,6 +26,7 @@ debug
     UI_DIR = ../debug/tests/.ui
 
     LIBS += -L../debug/ -lCommon
+    LIBS += -L../debug/ -lTestUtils
 }
 
 release
@@ -36,6 +38,7 @@ release
     UI_DIR = ../release/tests/.ui
 
     LIBS += -L../release/ -lCommon
+    LIBS += -L../release/ -lTestUtils
 }
 
 
@@ -52,9 +55,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     cbooktests.cpp \
-    clibrarytests.cpp
+    clibrarytests.cpp \
+    main.cpp
 
-HEADERS +=
+HEADERS += \
+    clibrarytests.h \
+    cbooktests.h
 
 unix {
     target.path = /usr/lib
