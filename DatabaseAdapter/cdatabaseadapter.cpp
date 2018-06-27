@@ -21,7 +21,7 @@ CDatabaseAdapter::~CDatabaseAdapter()
 QList<CBook> CDatabaseAdapter::readAll()
 {
     QSqlQuery selectQuery(_db->instance());
-    selectQuery.prepare("SELECT Id, FullPath, Name, Extension, Size, MD5 FROM Catalog ORDER BY Id;");
+    selectQuery.prepare("SELECT Id, FullPath, Name, Extension, Size, MD5 FROM Catalog;");
     selectQuery.exec();
 
     QList<CBook> result;
