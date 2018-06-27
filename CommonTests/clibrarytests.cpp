@@ -46,13 +46,16 @@ void CLibraryTests::allDoppelgangers()
     for(int i = 0; i < 2; ++i)
     {
         hash.push_back(QUuid::createUuid().toByteArray());
-        expectedDoppelgangers.push_back(QList<CBook>());
-        expectedDoppelgangers[i].push_back(CBook(1, "a1", "b1", "c1", 1, hash[i]));
-        expectedDoppelgangers[i].push_back(CBook(2, "a2", "b2", "c2", 2, hash[i]));
-        expectedDoppelgangers[i].push_back(CBook(3, "a3", "b3", "c3", 3, hash[i]));
+
+        QList<CBook> currentDoppelgangers;
+        currentDoppelgangers.push_back(CBook(1, "a1", "b1", "c1", 1, hash[i]));
+        currentDoppelgangers.push_back(CBook(2, "a2", "b2", "c2", 2, hash[i]));
+        currentDoppelgangers.push_back(CBook(3, "a3", "b3", "c3", 3, hash[i]));
+
+        expectedDoppelgangers.push_back(currentDoppelgangers);
     }
 
-    CLibrary library = filledLibrarywithPrefix("Some", 100);
+    CLibrary library = filledLibrarywithPrefix("Some", 500);
 
     foreach (const auto& list, expectedDoppelgangers)
     {

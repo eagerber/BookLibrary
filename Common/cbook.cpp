@@ -1,9 +1,5 @@
 #include "cbook.h"
 
-uint qHash(const CBook &val)
-{
-    return ::qHash(val.md5());
-}
 
 CBook::CBook()
 {

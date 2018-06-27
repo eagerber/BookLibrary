@@ -7,8 +7,6 @@
 
 class CBook;
 
-uint qHash(const CBook &val);
-
 class CBook : public QObject
 {
     Q_OBJECT
@@ -53,5 +51,11 @@ private:
     int _size;
     QByteArray _md5;
 };
+
+
+inline uint qHash(const CBook &val)
+{
+    return ::qHash(val.md5());
+}
 
 #endif // CBOOK_H
