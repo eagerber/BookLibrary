@@ -54,6 +54,16 @@ bool CBook::operator== (const CBook& rValue)
     return _id == rValue._id;
 }
 
+bool CBook::FullMatch(const CBook& rValue) const
+{
+    return _id        == rValue._id &&
+           _name      == rValue._name &&
+           _fullPath  == rValue._fullPath &&
+           _extension == rValue._extension &&
+           _size      == rValue._size &&
+           _md5       == rValue._md5;
+}
+
 int CBook::id() const
 {
     return _id;

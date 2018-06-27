@@ -12,7 +12,7 @@ class TESTUTILSSHARED_EXPORT TestUtils
 public:
     TestUtils();
 
-    static void Compare(const QList<CBook>& expected, const QList<CBook>& actual);
+    static void Compare(const QList<CBook> &expected, const QList<CBook> &actual);
 };
 
 #endif // TESTUTILS_H

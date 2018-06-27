@@ -31,6 +31,7 @@ public:
 
     CBook& operator= (const CBook& rValue);
     bool operator== (const CBook& rValue);
+    bool FullMatch(const CBook& rValue) const;
 
     int id() const;
     QString name() const;
