@@ -6,6 +6,8 @@
 #include <QCryptographicHash>
 #include <QByteArray>
 
+#include "cdatabaseadapter.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -45,8 +47,11 @@ private slots:
 
 private:
     QByteArray fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm);
+    void openDb();
 
     Ui::MainWindow *ui;
+
+    CDatabaseAdapter *_adapter;
 };
 
 #endif // MAINWINDOW_H

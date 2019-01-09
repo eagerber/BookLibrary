@@ -10,11 +10,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    _adapter = new CDatabaseAdapter();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete _adapter;
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -56,6 +59,21 @@ void MainWindow::on_actionSettings_triggered()
 {
 }
 
+void MainWindow::on_actionManual_process_triggered()
+{
+
+}
+
+void MainWindow::on_actionAutomatic_process_triggered()
+{
+
+}
+
+void MainWindow::onFilter()
+{
+
+}
+
 QByteArray MainWindow::fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm)
 {
     QFile f(fileName);
@@ -71,17 +89,41 @@ QByteArray MainWindow::fileChecksum(const QString &fileName, QCryptographicHash:
     return QByteArray();
 }
 
-void MainWindow::on_actionManual_process_triggered()
+void MainWindow::openDb()
 {
+    _dbFilename = QFileDialog::getOpenFileName(this, tr("Open Image"), ".\\", tr("Image Files (*.sqlite)"));
+    qDebug() << "Open File:" << _dbFilename;
 
-}
+    if(_dbFilename.isEmpty())
+    {
+        qDebug() << "Empty filename.";
+        return;
+    }
 
-void MainWindow::on_actionAutomatic_process_triggered()
-{
+    if(_database.isOpen())
+    {
+        _database.close();
+    }
 
-}
+    _database.setDatabaseName(_dbFilename);
 
-void MainWindow::onFilter()
-{
+    if (!_database.open())
+    {
+        return;
+    }
 
+    if(_databaseModel != 0)
+    {
+        delete _databaseModel;
+    }
+
+    _databaseModel = new QSqlTableModel(this, _database);
+
+    initModel();
+
+    _ui->actionSave->setEnabled(true);
+    _ui->actionSaveAs->setEnabled(true);
+    _ui->scanDirectoryBtn->setEnabled(true);
+    _ui->addRowBtn->setEnabled(true);
+    _ui->menuDuplicates->setEnabled(true);
 }
