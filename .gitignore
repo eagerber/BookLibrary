@@ -1,3 +1,6 @@
+debug/*
+release/*
+
 *Makefile*
 .Debug
 .Release
