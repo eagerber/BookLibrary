@@ -18,6 +18,7 @@ public:
 
     void insert(const CBook &book);
     void update(const CBook &book);
+    void remove(const CBook &book);
 
     void saveChanges(const QList<CBook> &books);
 

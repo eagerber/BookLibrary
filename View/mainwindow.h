@@ -5,6 +5,7 @@
 
 #include <QCryptographicHash>
 #include <QByteArray>
+#include <QSharedPointer>
 
 #include "cdatabaseadapter.h"
 
@@ -19,6 +20,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+    void resizeEvent(QResizeEvent* event);
 
 private slots:
     void on_actionOpen_triggered();
@@ -48,10 +51,20 @@ private slots:
 private:
     QByteArray fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm);
     void openDb();
+    void saveAsDb();
+    void initModel();
+    void loadDataToModel();
+    void resizeTableView();
+    void createNewDb();
+    void scanFolder();
+    void processFolder(const QString path);
 
-    Ui::MainWindow *ui;
+    Ui::MainWindow *_ui;
 
-    CDatabaseAdapter *_adapter;
+    QSharedPointer<CDatabaseAdapter> _adapter;
+    QString _dbFilename;
+    QStringList _extensionList;
+    QList<CBook> _data;
 };
 
 #endif // MAINWINDOW_H

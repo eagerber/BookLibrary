@@ -57,6 +57,21 @@ void CDatabaseAdapter::insert(const CBook &book)
     insertQuery.exec();
 }
 
+void CDatabaseAdapter::remove(const CBook &book)
+{
+    QSqlQuery removeQuery(_db->instance());
+    auto removeQueryString = QString("DELETE FROM Catalog WHERE Id = %1;").arg(book.id());
+    removeQuery.prepare(removeQueryString);
+
+    removeQuery.bindValue(":FullPath", book.fullPath());
+    removeQuery.bindValue(":Name", book.name());
+    removeQuery.bindValue(":Extension", book.extension());
+    removeQuery.bindValue(":Size", book.size());
+    removeQuery.bindValue(":MD5", book.md5());
+
+    removeQuery.exec();
+}
+
 void CDatabaseAdapter::update(const CBook &book)
 {
     QSqlQuery updateQuery(_db->instance());
@@ -76,6 +91,18 @@ void CDatabaseAdapter::saveChanges(const QList<CBook> &books)
 {
     auto booksInDatabase = readAll();
 
+    foreach (auto& item, booksInDatabase)
+    {
+        auto it = std::find_if(books.begin(), books.end(), [&] (const CBook &book)
+        {
+            return book.id() == item.id();
+        });
+
+        if(it == books.end())
+        {
+            remove(item);
+        }
+    }
 
     foreach (auto& item, books)
     {
@@ -84,14 +111,13 @@ void CDatabaseAdapter::saveChanges(const QList<CBook> &books)
             return book.id() == item.id();
         });
 
-        if(it != booksInDatabase.end())
-        {
-            update(item);
-        }
-        else
+        if(it == booksInDatabase.end())
         {
             insert(item);
+            continue;
         }
+
+        update(item);
     }
 }
 
