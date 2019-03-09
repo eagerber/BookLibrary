@@ -6,6 +6,7 @@
 #include <QCryptographicHash>
 #include <QByteArray>
 #include <QSharedPointer>
+#include <QStandardItemModel>
 
 #include "cdatabaseadapter.h"
 
@@ -50,7 +51,7 @@ private slots:
 
 private:
     QByteArray fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm);
-    void openDb();
+    void openDb(QString filename);
     void saveAsDb();
     void initModel();
     void loadDataToModel();
@@ -65,6 +66,7 @@ private:
     QString _dbFilename;
     QStringList _extensionList;
     QList<CBook> _data;
+    QStandardItemModel _model;
 };
 
 #endif // MAINWINDOW_H

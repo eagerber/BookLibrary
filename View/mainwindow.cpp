@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     _adapter = nullptr;
     _data.clear();
+
+    openDb("123.sqlite");
 }
 
 MainWindow::~MainWindow()
@@ -47,8 +49,17 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 }
 
 void MainWindow::on_actionOpen_triggered()
-{
-    openDb();
+{    
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Image"), ".\\", tr("Image Files (*.sqlite)"));
+    qDebug() << "Open File:" << _dbFilename;
+
+    if(_dbFilename.isEmpty())
+    {
+        qDebug() << "Empty filename.";
+        return;
+    }
+
+    openDb(filename);
 }
 
 void MainWindow::on_addRowBtn_clicked()
@@ -121,17 +132,14 @@ QByteArray MainWindow::fileChecksum(const QString &fileName, QCryptographicHash:
     return QByteArray();
 }
 
-void MainWindow::openDb()
+void MainWindow::openDb(QString filename)
 {
-    _dbFilename = QFileDialog::getOpenFileName(this, tr("Open Image"), ".\\", tr("Image Files (*.sqlite)"));
-    qDebug() << "Open File:" << _dbFilename;
-
-    if(_dbFilename.isEmpty())
+    if(filename.isEmpty())
     {
-        qDebug() << "Empty filename.";
         return;
     }
 
+    _dbFilename = filename;
     _adapter = QSharedPointer<CDatabaseAdapter>(new CDatabaseAdapter(_dbFilename));
 
     initModel();
@@ -175,13 +183,12 @@ void MainWindow::initModel()
    _data = _adapter->readAll();
 
    loadDataToModel();
-
    resizeTableView();
 }
 
 void MainWindow::loadDataToModel()
 {
-    auto model = QSharedPointer<QStandardItemModel>(new QStandardItemModel());
+    _model.clear();
 
     QStringList horizontalHeader;
     horizontalHeader.append("id");
@@ -190,31 +197,35 @@ void MainWindow::loadDataToModel()
     horizontalHeader.append("extension");
     horizontalHeader.append("size");
     horizontalHeader.append("md5");
-    model->setHorizontalHeaderLabels(horizontalHeader);
+    _model.setHorizontalHeaderLabels(horizontalHeader);
 
     for(int i = 0; i < _data.length(); ++i)
     {
-        model->setItem(i, 0, new QStandardItem(QString::number(_data[i].id())));
-        model->setItem(i, 1, new QStandardItem(_data[i].name()));
-        model->setItem(i, 2, new QStandardItem(_data[i].fullPath()));
-        model->setItem(i, 3, new QStandardItem(_data[i].extension()));
-        model->setItem(i, 4, new QStandardItem(QString::number(_data[i].size())));
-        model->setItem(i, 5, new QStandardItem(QString(_data[i].md5())));
+        _model.setItem(i, 0, new QStandardItem(QString::number(_data[i].id())));
+        _model.setItem(i, 1, new QStandardItem(_data[i].name()));
+        _model.setItem(i, 2, new QStandardItem(_data[i].fullPath()));
+        _model.setItem(i, 3, new QStandardItem(_data[i].extension()));
+        _model.setItem(i, 4, new QStandardItem(QString::number(_data[i].size())));
+        _model.setItem(i, 5, new QStandardItem(QString(_data[i].md5())));
     }
 
-    _ui->tableView->setModel(model.data());
+    _ui->tableView->setModel(&_model);
 }
 
 
 void MainWindow::resizeTableView()
 {
+    _ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    _ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    /*
     int size = _ui->tableView->width() - 10;
-    _ui->tableView->setColumnWidth(0, size * 0.05);
-    _ui->tableView->setColumnWidth(1, size * 0.5);
-    _ui->tableView->setColumnWidth(2, size * 0.19);
-    _ui->tableView->setColumnWidth(3, size * 0.05);
-    _ui->tableView->setColumnWidth(4, size * 0.1);
-    _ui->tableView->setColumnWidth(5, size * 0.1);
+    _ui->tableView->setColumnWidth(0, static_cast<int>(size * 0.05));
+    _ui->tableView->setColumnWidth(1, static_cast<int>(size * 0.5));
+    _ui->tableView->setColumnWidth(2, static_cast<int>(size * 0.19));
+    _ui->tableView->setColumnWidth(3, static_cast<int>(size * 0.05));
+    _ui->tableView->setColumnWidth(4, static_cast<int>(size * 0.1));
+    _ui->tableView->setColumnWidth(5, static_cast<int>(size * 0.1));
+    */
 }
 
 
@@ -296,19 +307,24 @@ void MainWindow::processFolder(const QString path)
         maskList << "*." + item;
     }
 
+    int id = 0;
+    foreach(auto& item, _data)
+    {
+        id = std::max(id, item.id());
+    }
+
     QDirIterator it(path, maskList, QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext())
     {
         qDebug() << it.next();
 
-        int id = 0;
         QString fullPath = it.filePath();
         QString fileName = it.fileName();
         QString extension = it.fileInfo().suffix().toLower();
         auto size = it.fileInfo().size();
         QByteArray hash = fileChecksum(fullPath, QCryptographicHash::Algorithm::Md5);
 
-        _data.append(CBook(id, fileName, fullPath, extension, size, hash));
+        _data.append(CBook(++id, fileName, fullPath, extension, size, hash));
     }
 
     qDebug() << "Finish scan.";
