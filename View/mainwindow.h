@@ -7,6 +7,7 @@
 #include <QByteArray>
 #include <QSharedPointer>
 #include <QStandardItemModel>
+#include <QShortcut>
 
 #include "cdatabaseadapter.h"
 
@@ -60,7 +61,8 @@ private:
     void scanFolder();
     void processFolder(const QString path);
 
-    Ui::MainWindow *_ui;
+    Ui::MainWindow *_ui;    
+    QShortcut *_deleteShortcut;
 
     QSharedPointer<CDatabaseAdapter> _adapter;
     QString _dbFilename;

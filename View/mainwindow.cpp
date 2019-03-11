@@ -11,9 +11,12 @@
 #include <QMessageBox>
 #include <QProcessEnvironment>
 #include <QDirIterator>
+#include <QDesktopServices>
 
 
 #include "cbook.h"
+#include "findduplicatesdialog.h"
+#include "automaticduplicatesprocessdialog.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -21,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _ui(new Ui::MainWindow)
 {
     _ui->setupUi(this);
+
+    _deleteShortcut = new QShortcut(QKeySequence(QKeySequence::Delete), _ui->tableView);
+    connect(_deleteShortcut, SIGNAL(activated()), this, SLOT(deleteRow()));
 
     _ui->actionSave->setEnabled(false);
     _ui->actionSaveAs->setEnabled(false);
@@ -37,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete _deleteShortcut;
     delete _ui;
 }
 
@@ -71,7 +78,15 @@ void MainWindow::on_addRowBtn_clicked()
 
 void MainWindow::deleteRow()
 {
+    QItemSelectionModel *select = _ui->tableView->selectionModel();
 
+     foreach (const auto &idx, select->selectedIndexes())
+     {
+         if (idx.isValid())
+         {
+            _ui->tableView->model()->removeRow(idx.row(), idx.parent());
+         }
+     }
 }
 
 void MainWindow::on_actionCreateNew_triggered()
@@ -96,25 +111,74 @@ void MainWindow::on_scanDirectoryBtn_clicked()
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
+    QString path = _ui->tableView->model()->data(_ui->tableView->model()->index(index.row(), 1)).toString();
+    QDesktopServices::openUrl(QUrl::fromLocalFile(path));
 }
 
 void MainWindow::on_actionSettings_triggered()
 {
+    SettingsWindow *settings = new SettingsWindow(nullptr, _extensionList);
+
+    settings->exec();
+
+    delete settings;
 }
 
 void MainWindow::on_actionManual_process_triggered()
 {
+    FindDuplicatesDialog findDuplicatesDialog;
+    findDuplicatesDialog.exec();
 
+    //_databaseModel->select();
 }
 
 void MainWindow::on_actionAutomatic_process_triggered()
 {
+    AutomaticDuplicatesProcessDialog automaticDuplicatesProcessDialog;
+    automaticDuplicatesProcessDialog.exec();
 
+    //CDopelgangersLibrary library;
+    //
+    //library.init();
+    //library.normalize();
+
+    //_databaseModel->select();
 }
 
 void MainWindow::onFilter()
 {
+    QString fullPathFilter = _ui->fullPathFilterLineEdit->text();
+    QString nameFilter = _ui->nameFilterLineEdit->text();
+    QString extensionFilter = _ui->extensionFilterLineEdit->text();
 
+    if(fullPathFilter.isEmpty() && nameFilter.isEmpty() && extensionFilter.isEmpty())
+    {
+        _model.setFilter("");
+        return;
+    }
+
+    QString filter = "";
+
+    QString filterTemplate = QString("%1 LIKE '\%%2\%'");
+    QString andFilterTemplate = QString(" AND %1 LIKE '\%%2\%'");
+    if(!fullPathFilter.isEmpty())
+    {
+        filter = filterTemplate.arg("FullPath").arg(fullPathFilter);
+
+        filterTemplate = andFilterTemplate;
+    }
+    if(!nameFilter.isEmpty())
+    {
+        filter = filter + filterTemplate.arg("Name").arg(nameFilter);
+
+        filterTemplate = andFilterTemplate;
+    }
+    if(!extensionFilter.isEmpty())
+    {
+        filter = filter + filterTemplate.arg("Extension").arg(extensionFilter);
+    }
+
+    _model.setFilter(filter);
 }
 
 QByteArray MainWindow::fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm)
