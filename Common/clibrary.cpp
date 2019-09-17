@@ -12,6 +12,46 @@ void CLibrary::add(const CBook& book)
     _bookList.push_back(book);
 }
 
+
+void CLibrary::addRange(const QList<CBook>& books)
+{
+    foreach (const auto& book, books)
+    {
+        _bookList.push_back(book);
+    }
+}
+
+int CLibrary::count()
+{
+    return _bookList.count();
+}
+
+CBook& CLibrary::operator[](int n)
+{
+    return _bookList[n];
+}
+
+const CBook& CLibrary::at(int n)
+{
+    return _bookList[n];
+}
+
+int CLibrary::maxIndex()
+{
+    int id = 0;
+    foreach(auto& item, _bookList)
+    {
+        id = std::max(id, item.id());
+    }
+
+    return id;
+}
+
+QList<CBook>& CLibrary::data()
+{
+    return _bookList;
+}
+
 QList<CBook> CLibrary::doppelgangers(const CBook& book)
 {
     QList<CBook> result;

@@ -1,5 +1,6 @@
 #include "clibrarytests.h"
 
+
 #include "testutils.h"
 
 
@@ -68,6 +69,17 @@ void CLibraryTests::allDoppelgangers()
     QList<QList<CBook>> actualDoppelgangers = library.allDoppelgangers();
 
     TestUtils::Compare(expectedDoppelgangers, actualDoppelgangers);
+}
+
+void CLibraryTests::count()
+{
+    CLibrary library;
+
+    library.add(CBook());
+
+    int expectedCount = 1;
+
+    QCOMPARE(expectedCount, library.count());
 }
 
 CLibrary CLibraryTests::filledLibrarywithPrefix(QString prefix, int count)

@@ -13,6 +13,7 @@ private slots:
     void add();
     void doppelgangers();
     void allDoppelgangers();
+    void count();
 private:
     CLibrary filledLibrarywithPrefix(QString prefix, int count);
 };

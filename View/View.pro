@@ -53,16 +53,20 @@ release
 }
 
 SOURCES += \
+    booklibrarymodel.cpp \
         main.cpp \
         mainwindow.cpp \
     automaticduplicatesprocessdialog.cpp \
     findduplicatesdialog.cpp \
+    proxybooklibrarymodel.cpp \
     settingswindow.cpp
 
 HEADERS += \
+    booklibrarymodel.h \
         mainwindow.h \
     automaticduplicatesprocessdialog.h \
     findduplicatesdialog.h \
+    proxybooklibrarymodel.h \
     settingswindow.h
 
 FORMS += \

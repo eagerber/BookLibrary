@@ -8,8 +8,13 @@
 #include <QSharedPointer>
 #include <QStandardItemModel>
 #include <QShortcut>
+#include <QSortFilterProxyModel>
+
 
 #include "cdatabaseadapter.h"
+
+class ProxyBookLibraryModel;
+class BookLibraryModel;
 
 namespace Ui {
 class MainWindow;
@@ -48,27 +53,31 @@ private slots:
 
     void on_actionAutomatic_process_triggered();
 
-    void onFilter();
+    void on_fullPathFilterLineEdit_editingFinished();
+
+    void on_nameFilterLineEdit_editingFinished();
+
+    void on_extensionFilterLineEdit_editingFinished();
+
+    void updateData(const QModelIndex & indexA, const QModelIndex & indexB);
 
 private:
     QByteArray fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm);
     void openDb(QString filename);
     void saveAsDb();
-    void initModel();
-    void loadDataToModel();
     void resizeTableView();
     void createNewDb();
     void scanFolder();
     void processFolder(const QString path);
+    void initModel(QString filename = "");
+    void updateTableView();
 
     Ui::MainWindow *_ui;    
     QShortcut *_deleteShortcut;
 
-    QSharedPointer<CDatabaseAdapter> _adapter;
-    QString _dbFilename;
     QStringList _extensionList;
-    QList<CBook> _data;
-    QStandardItemModel _model;
+    QSharedPointer<BookLibraryModel> _model;
+    QSharedPointer<ProxyBookLibraryModel> _proxyModel;
 };
 
 #endif // MAINWINDOW_H

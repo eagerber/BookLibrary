@@ -19,7 +19,7 @@ class FindDuplicatesDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FindDuplicatesDialog(QWidget *parent = 0);    
+    explicit FindDuplicatesDialog(QWidget *parent = 0);
     ~FindDuplicatesDialog();
 
 private slots:

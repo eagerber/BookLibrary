@@ -12,11 +12,13 @@
 #include <QProcessEnvironment>
 #include <QDirIterator>
 #include <QDesktopServices>
+#include <QModelIndex>
 
-
-#include "cbook.h"
 #include "findduplicatesdialog.h"
 #include "automaticduplicatesprocessdialog.h"
+#include "booklibrarymodel.h"
+#include "proxybooklibrarymodel.h"
+#include "cbook.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -35,9 +37,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     _extensionList << "pdf" << "djvu" << "doc" << "docx" << "fb2";
 
-    _adapter = nullptr;
-    _data.clear();
-
     openDb("123.sqlite");
 }
 
@@ -45,6 +44,14 @@ MainWindow::~MainWindow()
 {
     delete _deleteShortcut;
     delete _ui;
+}
+
+void MainWindow::updateData(const QModelIndex & topLeft, const QModelIndex & bottomRight)
+{
+    QModelIndex valueIndex(topLeft);
+
+    _ui->tableView->model()->setData(
+                topLeft, _ui->tableView->model()->data(topLeft));
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)
@@ -58,9 +65,9 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 void MainWindow::on_actionOpen_triggered()
 {    
     QString filename = QFileDialog::getOpenFileName(this, tr("Open Image"), ".\\", tr("Image Files (*.sqlite)"));
-    qDebug() << "Open File:" << _dbFilename;
+    qDebug() << "Open File:" << filename;
 
-    if(_dbFilename.isEmpty())
+    if(filename.isEmpty())
     {
         qDebug() << "Empty filename.";
         return;
@@ -71,9 +78,7 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::on_addRowBtn_clicked()
 {
-    _data.insert(0, CBook());
-
-    loadDataToModel();
+    _model->add(CBook());
 }
 
 void MainWindow::deleteRow()
@@ -96,7 +101,7 @@ void MainWindow::on_actionCreateNew_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
-    _adapter->saveChanges(_data);
+    _model->saveChanges();
 }
 
 void MainWindow::on_actionSaveAs_triggered()
@@ -145,42 +150,6 @@ void MainWindow::on_actionAutomatic_process_triggered()
     //_databaseModel->select();
 }
 
-void MainWindow::onFilter()
-{
-    QString fullPathFilter = _ui->fullPathFilterLineEdit->text();
-    QString nameFilter = _ui->nameFilterLineEdit->text();
-    QString extensionFilter = _ui->extensionFilterLineEdit->text();
-
-    if(fullPathFilter.isEmpty() && nameFilter.isEmpty() && extensionFilter.isEmpty())
-    {
-        _model.setFilter("");
-        return;
-    }
-
-    QString filter = "";
-
-    QString filterTemplate = QString("%1 LIKE '\%%2\%'");
-    QString andFilterTemplate = QString(" AND %1 LIKE '\%%2\%'");
-    if(!fullPathFilter.isEmpty())
-    {
-        filter = filterTemplate.arg("FullPath").arg(fullPathFilter);
-
-        filterTemplate = andFilterTemplate;
-    }
-    if(!nameFilter.isEmpty())
-    {
-        filter = filter + filterTemplate.arg("Name").arg(nameFilter);
-
-        filterTemplate = andFilterTemplate;
-    }
-    if(!extensionFilter.isEmpty())
-    {
-        filter = filter + filterTemplate.arg("Extension").arg(extensionFilter);
-    }
-
-    _model.setFilter(filter);
-}
-
 QByteArray MainWindow::fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm)
 {
     QFile f(fileName);
@@ -203,10 +172,7 @@ void MainWindow::openDb(QString filename)
         return;
     }
 
-    _dbFilename = filename;
-    _adapter = QSharedPointer<CDatabaseAdapter>(new CDatabaseAdapter(_dbFilename));
-
-    initModel();
+    initModel(filename);
 
     _ui->actionSave->setEnabled(true);
     _ui->actionSaveAs->setEnabled(true);
@@ -227,13 +193,9 @@ void MainWindow::saveAsDb()
     qDebug() << "Save File:" <<  newFilename;
 
     QFile::remove(newFilename);
-    QFile::copy(_dbFilename, newFilename);
+    QFile::copy(_model->filename(), newFilename);
 
-    _dbFilename = newFilename;
-
-    _adapter = QSharedPointer<CDatabaseAdapter>(new CDatabaseAdapter(_dbFilename));
-
-    initModel();
+    initModel(newFilename);
 
     _ui->actionSave->setEnabled(true);
     _ui->actionSaveAs->setEnabled(true);
@@ -242,54 +204,14 @@ void MainWindow::saveAsDb()
     _ui->menuDuplicates->setEnabled(true);
 }
 
-void MainWindow::initModel()
-{
-   _data = _adapter->readAll();
-
-   loadDataToModel();
-   resizeTableView();
-}
-
-void MainWindow::loadDataToModel()
-{
-    _model.clear();
-
-    QStringList horizontalHeader;
-    horizontalHeader.append("id");
-    horizontalHeader.append("name");
-    horizontalHeader.append("fullPath");
-    horizontalHeader.append("extension");
-    horizontalHeader.append("size");
-    horizontalHeader.append("md5");
-    _model.setHorizontalHeaderLabels(horizontalHeader);
-
-    for(int i = 0; i < _data.length(); ++i)
-    {
-        _model.setItem(i, 0, new QStandardItem(QString::number(_data[i].id())));
-        _model.setItem(i, 1, new QStandardItem(_data[i].name()));
-        _model.setItem(i, 2, new QStandardItem(_data[i].fullPath()));
-        _model.setItem(i, 3, new QStandardItem(_data[i].extension()));
-        _model.setItem(i, 4, new QStandardItem(QString::number(_data[i].size())));
-        _model.setItem(i, 5, new QStandardItem(QString(_data[i].md5())));
-    }
-
-    _ui->tableView->setModel(&_model);
-}
-
-
 void MainWindow::resizeTableView()
 {
-    _ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    _ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    /*
-    int size = _ui->tableView->width() - 10;
-    _ui->tableView->setColumnWidth(0, static_cast<int>(size * 0.05));
-    _ui->tableView->setColumnWidth(1, static_cast<int>(size * 0.5));
-    _ui->tableView->setColumnWidth(2, static_cast<int>(size * 0.19));
-    _ui->tableView->setColumnWidth(3, static_cast<int>(size * 0.05));
-    _ui->tableView->setColumnWidth(4, static_cast<int>(size * 0.1));
-    _ui->tableView->setColumnWidth(5, static_cast<int>(size * 0.1));
-    */
+    // TODO: use first column width
+    int size = _ui->tableView->width();
+    _ui->tableView->setColumnWidth(0, static_cast<int>(size * 0.4));
+    _ui->tableView->setColumnWidth(1, static_cast<int>(size * 0.3));
+    _ui->tableView->setColumnWidth(2, static_cast<int>(size * 0.08));
+    _ui->tableView->setColumnWidth(3, static_cast<int>(size * 0.08));
 }
 
 
@@ -304,12 +226,8 @@ void MainWindow::createNewDb()
     }
     qDebug() << "New DB File:" <<  currentFilename;
 
-    _dbFilename = currentFilename;
-    QFile::remove(_dbFilename);
-
-    _adapter =  QSharedPointer<CDatabaseAdapter>(new CDatabaseAdapter(_dbFilename));
-
-    initModel();
+    QFile::remove(currentFilename);
+    initModel(currentFilename);
 
     // TODO: move to method
     _ui->actionSave->setEnabled(true);
@@ -321,7 +239,7 @@ void MainWindow::createNewDb()
 
 void MainWindow::scanFolder()
 {
-    if(_dbFilename.isEmpty())
+    if(!_model)
     {
         qDebug() << "No open database";
         return;
@@ -358,8 +276,27 @@ void MainWindow::scanFolder()
     {
         processFolder(dir.path());
     }
-    _adapter->saveChanges(_data);
-    loadDataToModel();
+
+    _model->saveChanges();
+
+    updateTableView();
+}
+
+
+void MainWindow::initModel(QString filename)
+{
+    _model = QSharedPointer<BookLibraryModel>(new BookLibraryModel(filename));
+    _model->init();
+
+    updateTableView();
+    //connect(_ui->tableView->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(updateData(QModelIndex,QModelIndex)));
+}
+
+// TODO: do something with it
+void MainWindow::updateTableView()
+{
+    _proxyModel = QSharedPointer<ProxyBookLibraryModel>(new ProxyBookLibraryModel(_model.get()));
+    _ui->tableView->setModel(_proxyModel.get());
 }
 
 
@@ -371,11 +308,7 @@ void MainWindow::processFolder(const QString path)
         maskList << "*." + item;
     }
 
-    int id = 0;
-    foreach(auto& item, _data)
-    {
-        id = std::max(id, item.id());
-    }
+    int id = _model->maxIndex();
 
     QDirIterator it(path, maskList, QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext())
@@ -388,18 +321,23 @@ void MainWindow::processFolder(const QString path)
         auto size = it.fileInfo().size();
         QByteArray hash = fileChecksum(fullPath, QCryptographicHash::Algorithm::Md5);
 
-        _data.append(CBook(++id, fileName, fullPath, extension, size, hash));
+        _model->add(CBook(++id, fileName, fullPath, extension, size, hash));
     }
 
-    qDebug() << "Finish scan.";
-
+    qDebug() << "Finish scan.";    
 }
 
+void MainWindow::on_fullPathFilterLineEdit_editingFinished()
+{
+    _proxyModel->setFullPath(_ui->fullPathFilterLineEdit->text());
+}
 
+void MainWindow::on_nameFilterLineEdit_editingFinished()
+{
+    _proxyModel->setName(_ui->nameFilterLineEdit->text());
+}
 
-
-
-
-
-
-
+void MainWindow::on_extensionFilterLineEdit_editingFinished()
+{
+    _proxyModel->setExtension(_ui->extensionFilterLineEdit->text());
+}

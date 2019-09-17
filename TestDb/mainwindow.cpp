@@ -231,7 +231,8 @@ void MainWindow::saveAsDb()
         return;
     }
 
-    initModel();
+    
+	();
 }
 
 void MainWindow::createNewDb()
