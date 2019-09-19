@@ -54,7 +54,7 @@ void FindDuplicatesDialog::init()
 void FindDuplicatesDialog::fillCopies(int bookIndex)
 {
     QStringList inspectedCopies;
-    QList<CBook> currentCopies = _library.doppelgangers(_doppelgangers[0]);
+    QList<CBook> currentCopies = _library.doppelgangers(_doppelgangers[bookIndex]);
     for(int i = 0; i < currentCopies.length(); ++i)
     {
         inspectedCopies.append(currentCopies[i].fullPath());
