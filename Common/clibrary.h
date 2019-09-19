@@ -2,6 +2,8 @@
 #define CLIBRARY_H
 
 #include <QList>
+#include <QMap>
+
 #include "cbook.h"
 
 class CLibrary
@@ -24,11 +26,12 @@ public:
     // TODO: tests
     QList<CBook>& data();
 
-    QList<CBook> doppelgangers(const CBook& book);
-    QList<QList<CBook>> allDoppelgangers();
+    QList<CBook> doppelgangers(CBook& book);
+    QList<CBook> doppelgangers();
 
 private:
-    QList<CBook> _bookList;
+    QList<CBook> _data;
+    QMap<QByteArray, QList<int>> _doppelgangers;
 };
 
 #endif // CLIBRARY_H

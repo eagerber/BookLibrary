@@ -26,6 +26,8 @@ public:
     void saveChanges();
     QString filename();
 
+    CLibrary& library();
+
 private:
     BookLibraryModel();
 

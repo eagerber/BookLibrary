@@ -1,90 +1,86 @@
 #include "clibrary.h"
 
-#include <QSet>
-
 CLibrary::CLibrary()
 {
-
 }
 
 void CLibrary::add(const CBook& book)
 {
-    _bookList.push_back(book);
-}
+    _data.append(book);
 
+    auto hash = book.md5();
+    if(!_doppelgangers.contains(hash))
+    {
+        _doppelgangers.insert(hash, QList<int>());
+    }
+
+    int currentIndex = _data.length() - 1;
+    _doppelgangers[hash].push_back(currentIndex);
+}
 
 void CLibrary::addRange(const QList<CBook>& books)
 {
-    foreach (const auto& book, books)
+    for(int i = 0; i < books.length(); ++i)
     {
-        _bookList.push_back(book);
+        add(books[i]);
     }
 }
 
 int CLibrary::count()
 {
-    return _bookList.count();
+    return _data.length();
 }
 
 CBook& CLibrary::operator[](int n)
 {
-    return _bookList[n];
+    return _data[n];
 }
 
 const CBook& CLibrary::at(int n)
 {
-    return _bookList[n];
+    return _data[n];
 }
 
 int CLibrary::maxIndex()
 {
     int id = 0;
-    foreach(auto& item, _bookList)
+    for(int i = 0; i < _data.length(); ++i)
     {
-        id = std::max(id, item.id());
+        id = std::max(id, _data[i].id());
     }
 
     return id;
 }
 
+
 QList<CBook>& CLibrary::data()
 {
-    return _bookList;
+    return _data;
 }
 
-QList<CBook> CLibrary::doppelgangers(const CBook& book)
+QList<CBook> CLibrary::doppelgangers(CBook& book)
 {
     QList<CBook> result;
 
-    foreach (const auto& item, _bookList)
+    auto& indecies = _doppelgangers[book.md5()];
+
+    for(int i = 0; i < indecies.length(); ++i)
     {
-        if(book.HashSumMatch(item))
-        {
-            result.push_back(item);
-        }
+        result.push_back(_data[indecies[i]]);
     }
 
     return result;
 }
 
-QList<QList<CBook>> CLibrary::allDoppelgangers()
+QList<CBook> CLibrary::doppelgangers()
 {
-    QSet<QByteArray> uniqueHashes;
+    QList<CBook> result;
 
-    QList<QList<CBook>> result;
-
-    foreach (const auto& item, _bookList)
+    foreach (auto& indeciesList, _doppelgangers)
     {
-        if(uniqueHashes.contains(item.md5()))
+        if(indeciesList.length() > 1)
         {
-            continue;
-        }
-
-        auto currentDoppelgangers = doppelgangers(item);
-        if(currentDoppelgangers.length() > 1)
-        {
-            result.push_back(currentDoppelgangers);
-            uniqueHashes += currentDoppelgangers[0].md5();
+            result.append(_data[indeciesList[0]]);
         }
     }
 

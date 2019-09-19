@@ -131,7 +131,7 @@ void MainWindow::on_actionSettings_triggered()
 
 void MainWindow::on_actionManual_process_triggered()
 {
-    FindDuplicatesDialog findDuplicatesDialog;
+    FindDuplicatesDialog findDuplicatesDialog(_model->library());
     findDuplicatesDialog.exec();
 
     //_databaseModel->select();

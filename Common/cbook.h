@@ -5,7 +5,6 @@
 #include <QString>
 #include <QByteArray>
 
-class CBook;
 
 class CBook : public QObject
 {

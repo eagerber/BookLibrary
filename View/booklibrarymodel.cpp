@@ -118,6 +118,11 @@ QString BookLibraryModel::filename()
     return _databaseFilename;
 }
 
+CLibrary& BookLibraryModel::library()
+{
+    return *_library;
+}
+
 
 
 

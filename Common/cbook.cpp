@@ -57,7 +57,7 @@ bool CBook::operator== (const CBook& rValue) const
            _fullPath  == rValue._fullPath &&
            _extension == rValue._extension &&
            _size      == rValue._size &&
-           _md5       == rValue._md5;;
+           _md5       == rValue._md5;
 }
 
 bool CBook::HashSumMatch(const CBook& rValue) const

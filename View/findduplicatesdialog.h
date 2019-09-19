@@ -7,6 +7,8 @@
 #include <QItemSelection>
 #include <QList>
 
+class CLibrary;
+class CBook;
 
 namespace Ui {
 class FindDuplicatesDialog;
@@ -19,7 +21,7 @@ class FindDuplicatesDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit FindDuplicatesDialog(QWidget *parent = 0);
+    explicit FindDuplicatesDialog(CLibrary &library, QWidget *parent = nullptr);
     ~FindDuplicatesDialog();
 
 private slots:
@@ -31,11 +33,15 @@ private slots:
 
 private:
     void init();
+    void fillCopies(int bookIndex);
 
     Ui::FindDuplicatesDialog *_ui;
 
     QStringListModel *_inspectedModel;
     QStringListModel *_inspectedCopiesModel;
+
+    CLibrary &_library;
+    QList<CBook> _doppelgangers;
 };
 
 #endif // FINDDUPLICATESDIALOG_H
