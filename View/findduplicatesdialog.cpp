@@ -92,4 +92,6 @@ void FindDuplicatesDialog::on_deleteDuplicatesBtn_clicked()
 
     int booksListIndex = _ui->inspectedFiles->selectionModel()->currentIndex().row();
     int trueBookIndex = _ui->inspectedCopiesList->selectionModel()->currentIndex().row();
+
+
 }

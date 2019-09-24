@@ -12,6 +12,10 @@ public:
     CLibrary();
 
     void add(const CBook& book);
+    // TODO: tests
+    void remove(const CBook& book);
+    // TODO: tests
+    void remove(int index);
 
     // TODO: tests
     void addRange(const QList<CBook>& book);
@@ -29,9 +33,12 @@ public:
     QList<CBook> doppelgangers(CBook& book);
     QList<CBook> doppelgangers();
 
+    // TODO: tests
+    void deleteDuplicates();
+
 private:
     QList<CBook> _data;
-    QMap<QByteArray, QList<int>> _doppelgangers;
+    QMap<QByteArray, QList<CBook*>> _doppelgangers;
 };
 
 #endif // CLIBRARY_H

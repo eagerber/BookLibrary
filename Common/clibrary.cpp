@@ -1,5 +1,7 @@
 #include "clibrary.h"
 
+#include <algorithm>
+
 CLibrary::CLibrary()
 {
 }
@@ -11,12 +13,38 @@ void CLibrary::add(const CBook& book)
     auto hash = book.md5();
     if(!_doppelgangers.contains(hash))
     {
-        _doppelgangers.insert(hash, QList<int>());
+        _doppelgangers.insert(hash, QList<CBook*>());
     }
 
-    int currentIndex = _data.length() - 1;
-    _doppelgangers[hash].push_back(currentIndex);
+    _doppelgangers[hash].push_back(&_data.last());
 }
+
+void CLibrary::remove(const CBook& book)
+{
+    auto bookHash = book.md5();
+    if(!_doppelgangers.contains(bookHash)) return;
+
+    int indexInList = _data.indexOf(book);
+    int doppelgangerIndex = _doppelgangers[bookHash].indexOf(&_data[indexInList]);
+
+    _doppelgangers[bookHash].removeAt(doppelgangerIndex);
+
+    if(_doppelgangers[bookHash].length() == 0)
+    {
+        _doppelgangers.remove(bookHash);
+    }
+
+    _data.removeAt(indexInList);
+}
+
+void CLibrary::remove(int index)
+{
+    if(index > _data.length()) return;
+
+    remove(_data[index]);
+}
+
+
 
 void CLibrary::addRange(const QList<CBook>& books)
 {
@@ -66,7 +94,7 @@ QList<CBook> CLibrary::doppelgangers(CBook& book)
 
     for(int i = 0; i < indecies.length(); ++i)
     {
-        result.push_back(_data[indecies[i]]);
+        result.push_back(*indecies[i]);
     }
 
     return result;
@@ -80,9 +108,37 @@ QList<CBook> CLibrary::doppelgangers()
     {
         if(indeciesList.length() > 1)
         {
-            result.append(_data[indeciesList[0]]);
+            result.append(*indeciesList[0]);
         }
     }
 
     return result;
 }
+
+void CLibrary::deleteDuplicates()
+{
+    QList<CBook> fullDuplicates;
+    foreach(auto& indeciesList, _doppelgangers)
+    {
+        for(int i = 0 ; i < indeciesList.length(); ++i)
+        {
+            for(int j = 1 ; j < indeciesList.length(); ++j)
+            {
+                if(indeciesList[i] == indeciesList[j])
+                {
+                    fullDuplicates.append(*indeciesList[j]);
+                }
+            }
+        }
+    }
+
+    foreach(auto book, fullDuplicates)
+    {
+        remove(book);
+    }
+}
+
+
+
+
+

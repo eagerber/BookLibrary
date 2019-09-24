@@ -181,6 +181,7 @@
      </property>
      <addaction name="actionManual_process"/>
      <addaction name="actionAutomatic_process"/>
+     <addaction name="actionRemove_full_copies"/>
     </widget>
     <addaction name="menuDuplicates"/>
     <addaction name="separator"/>
@@ -231,6 +232,11 @@
   <action name="actionAutomatic_process">
    <property name="text">
     <string>Automatic process</string>
+   </property>
+  </action>
+  <action name="actionRemove_full_copies">
+   <property name="text">
+    <string>Remove full copies</string>
    </property>
   </action>
  </widget>

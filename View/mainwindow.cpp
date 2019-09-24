@@ -19,6 +19,7 @@
 #include "booklibrarymodel.h"
 #include "proxybooklibrarymodel.h"
 #include "cbook.h"
+#include "clibrary.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -289,6 +290,8 @@ void MainWindow::scanFolder()
 
     _ui->progressBar->setValue(_ui->progressBar->maximum());
     _ui->progressBar->hide();
+
+    deleteDuplicates();
 }
 
 
@@ -308,6 +311,11 @@ void MainWindow::updateTableView()
     _ui->tableView->setModel(_proxyModel.get());
 }
 
+void MainWindow::deleteDuplicates()
+{
+    _model->library().deleteDuplicates();
+    updateTableView();
+}
 
 void MainWindow::processFolder(const QString path)
 {
@@ -349,4 +357,9 @@ void MainWindow::on_nameFilterLineEdit_editingFinished()
 void MainWindow::on_extensionFilterLineEdit_editingFinished()
 {
     _proxyModel->setExtension(_ui->extensionFilterLineEdit->text());
+}
+
+void MainWindow::on_actionRemove_full_copies_triggered()
+{
+    deleteDuplicates();
 }

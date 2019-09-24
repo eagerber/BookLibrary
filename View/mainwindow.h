@@ -61,6 +61,8 @@ private slots:
 
     void updateData(const QModelIndex & indexA, const QModelIndex & indexB);
 
+    void on_actionRemove_full_copies_triggered();
+
 private:
     QByteArray fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm);
     void openDb(QString filename);
@@ -71,6 +73,7 @@ private:
     void processFolder(const QString path);
     void initModel(QString filename = "");
     void updateTableView();
+    void deleteDuplicates();
 
     Ui::MainWindow *_ui;    
     QShortcut *_deleteShortcut;
