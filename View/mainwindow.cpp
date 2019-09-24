@@ -37,6 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     _extensionList << "pdf" << "djvu" << "doc" << "docx" << "fb2";
 
+    _ui->progressBar->show();
+    _ui->progressBar->setValue(0);
+
     openDb("123.sqlite");
 }
 
@@ -259,6 +262,9 @@ void MainWindow::scanFolder()
         return;
     }
 
+    _ui->progressBar->show();
+    _ui->progressBar->setValue(0);
+
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
     QDir userProfileDesktop = QString(environment.value("userprofile") + "\\Desktop");
     QDir allUserProfileDesktop = QString(environment.value("allusersprofile") + "\\Desktop");
@@ -280,6 +286,9 @@ void MainWindow::scanFolder()
     _model->saveChanges();
 
     updateTableView();
+
+    _ui->progressBar->setValue(_ui->progressBar->maximum());
+    _ui->progressBar->hide();
 }
 
 
