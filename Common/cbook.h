@@ -32,6 +32,8 @@ public:
 
     CBook& operator= (const CBook& rValue);
     bool operator== (const CBook& rValue) const;
+    //TODO: test
+    bool fullMatch (const CBook& rValue) const;
     bool HashSumMatch(const CBook& rValue) const;
 
     int id() const;

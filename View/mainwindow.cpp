@@ -143,7 +143,7 @@ void MainWindow::on_actionManual_process_triggered()
 
 void MainWindow::on_actionAutomatic_process_triggered()
 {
-    AutomaticDuplicatesProcessDialog automaticDuplicatesProcessDialog;
+    AutomaticDuplicatesProcessDialog automaticDuplicatesProcessDialog(_model->library());
     automaticDuplicatesProcessDialog.exec();
 
     //CDopelgangersLibrary library;
@@ -266,6 +266,53 @@ void MainWindow::scanFolder()
     _ui->progressBar->show();
     _ui->progressBar->setValue(0);
 
+    QStringList maskList;
+    foreach (const auto& item, _extensionList)
+    {
+        maskList << "*." + item;
+    }
+
+    QStringList dirsForScanning = getDirsForScanning(dir.path());
+    int totalCount = filesCount(dirsForScanning, maskList);
+    _ui->progressBar->setMaximum(totalCount);
+
+    processFolders(dirsForScanning, maskList);
+
+    //TODO: progress bar for delete duplicates
+    deleteDuplicates();
+
+    _model->saveChanges();
+
+    updateTableView();
+
+    _ui->progressBar->setValue(_ui->progressBar->maximum());
+    _ui->progressBar->hide();
+}
+
+int MainWindow::filesCount(const QStringList &dirs, const QStringList &maskList)
+{
+    int result = 0;
+
+    foreach (const auto &dir, dirs)
+    {
+        QDirIterator it(dir, maskList, QDir::Files, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
+        int count = 0;
+        while (it.hasNext())
+        {
+            count++;
+            qDebug() << it.next();
+        }
+
+        result += count;
+    }
+
+    return result;
+}
+
+QStringList MainWindow::getDirsForScanning(const QDir &dir)
+{
+    QStringList result;
+
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
     QDir userProfileDesktop = QString(environment.value("userprofile") + "\\Desktop");
     QDir allUserProfileDesktop = QString(environment.value("allusersprofile") + "\\Desktop");
@@ -275,25 +322,48 @@ void MainWindow::scanFolder()
        dir == allUserProfileDesktop ||
        dir == publicDesktop)
     {
-        processFolder(userProfileDesktop.path());
-        processFolder(allUserProfileDesktop.path());
-        processFolder(publicDesktop.path());
+        addToDirsForScanning(userProfileDesktop.path(), result);
+        addToDirsForScanning(allUserProfileDesktop.path(), result);
+        addToDirsForScanning(publicDesktop.path(), result);
     }
     else
     {
-        processFolder(dir.path());
+        addToDirsForScanning(dir.path(), result);
     }
 
-    _model->saveChanges();
 
-    updateTableView();
+    QDirIterator it(dir.path(), QStringList() << "*.lnk", QDir::AllEntries, QDirIterator::Subdirectories);
+    while (it.hasNext())
+    {
+        qDebug() << it.next();
 
-    _ui->progressBar->setValue(_ui->progressBar->maximum());
-    _ui->progressBar->hide();
+        QFileInfo currentFileInfo = it.fileInfo();
 
-    deleteDuplicates();
+        if(currentFileInfo.isSymLink())
+        {
+            QString symLinkTarget = currentFileInfo.symLinkTarget();
+            result << getDirsForScanning(symLinkTarget);
+        }
+    }
+
+    return result;
 }
 
+void MainWindow::addToDirsForScanning(const QString &path, QStringList &dirsForScanning)
+{
+    if(dirsForScanning.indexOf(path) == -1)
+    {
+        dirsForScanning << path;
+    }
+}
+
+void MainWindow::processFolders(const QStringList &dirs, const QStringList &maskList)
+{
+    foreach (const auto &dir, dirs)
+    {
+        processFolder(dir, maskList);
+    }
+}
 
 void MainWindow::initModel(QString filename)
 {
@@ -317,20 +387,15 @@ void MainWindow::deleteDuplicates()
     updateTableView();
 }
 
-void MainWindow::processFolder(const QString path)
+void MainWindow::processFolder(const QString path, const QStringList &maskList)
 {
-    QStringList maskList;
-    foreach (const auto& item, _extensionList)
-    {
-        maskList << "*." + item;
-    }
-
     int id = _model->maxIndex();
 
     QDirIterator it(path, maskList, QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext())
     {
         qDebug() << it.next();
+        stepProgress();
 
         QString fullPath = it.filePath();
         QString fileName = it.fileName();
@@ -342,6 +407,13 @@ void MainWindow::processFolder(const QString path)
     }
 
     qDebug() << "Finish scan.";    
+}
+
+
+void MainWindow::stepProgress()
+{
+    QCoreApplication::processEvents();
+    _ui->progressBar->setValue(_ui->progressBar->value() + 1);
 }
 
 void MainWindow::on_fullPathFilterLineEdit_editingFinished()

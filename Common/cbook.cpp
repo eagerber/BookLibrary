@@ -60,6 +60,16 @@ bool CBook::operator== (const CBook& rValue) const
            _md5       == rValue._md5;
 }
 
+
+bool CBook::fullMatch (const CBook& rValue) const
+{
+    return _name      == rValue._name &&
+           _fullPath  == rValue._fullPath &&
+           _extension == rValue._extension &&
+           _size      == rValue._size &&
+           _md5       == rValue._md5;
+}
+
 bool CBook::HashSumMatch(const CBook& rValue) const
 {
     return _md5 == rValue._md5;

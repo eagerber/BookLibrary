@@ -35,7 +35,12 @@ void FindDuplicatesDialog::init()
 {
     _doppelgangers = _library.doppelgangers();
 
-    if(_doppelgangers.length() == 0) return;
+    if(_doppelgangers.length() == 0)
+    {
+        _inspectedModel->setStringList(QStringList());
+        _inspectedCopiesModel->setStringList(QStringList());
+        return;
+    }
 
     QStringList inspected;
     for(int i = 0; i < _doppelgangers.length(); ++i)
@@ -44,7 +49,7 @@ void FindDuplicatesDialog::init()
     }
     _inspectedModel->setStringList(inspected);
 
-    _ui->inspectedFiles->setModel(_inspectedModel);
+    //_ui->inspectedFiles->setModel(_inspectedModel);
 
     fillCopies(0);
 
@@ -94,4 +99,8 @@ void FindDuplicatesDialog::on_deleteDuplicatesBtn_clicked()
     int trueBookIndex = _ui->inspectedCopiesList->selectionModel()->currentIndex().row();
 
 
+    _library.normalize(_doppelgangers[booksListIndex], _inspectedCopiesModel->stringList().at(trueBookIndex));
+
+    //TODO: clean string lists
+    init();
 }

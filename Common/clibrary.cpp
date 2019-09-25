@@ -2,6 +2,13 @@
 
 #include <algorithm>
 
+//TODO: delete file
+#include "Windows.h"
+#include "shellapi.h"
+#include <QDebug>
+#include <QFile>
+#include <QFileInfo>
+
 CLibrary::CLibrary()
 {
 }
@@ -90,11 +97,11 @@ QList<CBook> CLibrary::doppelgangers(CBook& book)
 {
     QList<CBook> result;
 
-    auto& indecies = _doppelgangers[book.md5()];
+    auto& bookList = _doppelgangers[book.md5()];
 
-    for(int i = 0; i < indecies.length(); ++i)
+    for(int i = 0; i < bookList.length(); ++i)
     {
-        result.push_back(*indecies[i]);
+        result.push_back(*bookList[i]);
     }
 
     return result;
@@ -104,11 +111,11 @@ QList<CBook> CLibrary::doppelgangers()
 {
     QList<CBook> result;
 
-    foreach (auto& indeciesList, _doppelgangers)
+    foreach (auto& bookList, _doppelgangers)
     {
-        if(indeciesList.length() > 1)
+        if(bookList.length() > 1)
         {
-            result.append(*indeciesList[0]);
+            result.append(*bookList[0]);
         }
     }
 
@@ -118,15 +125,15 @@ QList<CBook> CLibrary::doppelgangers()
 void CLibrary::deleteDuplicates()
 {
     QList<CBook> fullDuplicates;
-    foreach(auto& indeciesList, _doppelgangers)
+    foreach(auto& bookList, _doppelgangers)
     {
-        for(int i = 0 ; i < indeciesList.length(); ++i)
+        for(int i = 0 ; i < bookList.length(); ++i)
         {
-            for(int j = 1 ; j < indeciesList.length(); ++j)
+            for(int j = i+ 1; j < bookList.length(); ++j)
             {
-                if(indeciesList[i] == indeciesList[j])
+                if(bookList[i]->fullMatch(*bookList[j]))
                 {
-                    fullDuplicates.append(*indeciesList[j]);
+                    fullDuplicates.append(*bookList[j]);
                 }
             }
         }
@@ -137,6 +144,83 @@ void CLibrary::deleteDuplicates()
         remove(book);
     }
 }
+
+void CLibrary::normalize(const CBook &book, const QString truePath)
+{
+    //TODO: need to be simplified!
+    auto bookList = _doppelgangers[book.md5()];
+    QList<CBook> deleteList;
+    for(int i = bookList.length() - 1; i > -1; --i)
+    {
+        auto currentBook = bookList.at(i);
+        auto currentFullPath = currentBook->fullPath();
+        if(currentFullPath != truePath)
+        {
+            deleteList.append(*currentBook);
+            deleteFile(currentFullPath);
+        }
+    }
+
+    foreach(auto book, deleteList)
+    {
+        remove(book);
+    }
+}
+
+void CLibrary::deleteFile(const QString &filename)
+{
+    QFileInfo fileinfo(filename);
+    if( !fileinfo.exists() ) return;
+        //throw OdtCore::Exception( "File doesnt exists, cant move to trash" );
+
+    WCHAR from[ MAX_PATH ];
+    memset( from, 0, sizeof( from ));
+    int l = fileinfo.absoluteFilePath().toWCharArray( from );
+    Q_ASSERT( 0 <= l && l < MAX_PATH );
+    from[ l ] = '\0';
+    SHFILEOPSTRUCT fileop;
+    memset( &fileop, 0, sizeof( fileop ) );
+    fileop.wFunc = FO_DELETE;
+    fileop.pFrom = from;
+    fileop.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT;
+    int rv = SHFileOperation( &fileop );
+    if( 0 != rv )
+    {
+        qDebug() << rv << QString::number( rv ).toInt( nullptr, 8 );
+        return;
+        //throw OdtCore::Exception( "move to trash failed" );
+    }
+
+    /*
+
+    //QFile file(filename);
+    //file.remove();
+
+    // Move to recycle bin
+    LPCSTR lpcFrom = (LPCSTR)filename.toLocal8Bit().constData();
+
+    SHFILEOPSTRUCTA operation;
+
+    operation.wFunc = FO_DELETE;
+    operation.pFrom = lpcFrom;
+    operation.fFlags = FOF_ALLOWUNDO|FOF_NO_UI|FOF_NORECURSION;
+
+    int result = SHFileOperationA(&operation);
+
+    qDebug() << filename << result;
+    */
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

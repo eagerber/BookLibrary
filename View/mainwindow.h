@@ -9,6 +9,8 @@
 #include <QStandardItemModel>
 #include <QShortcut>
 #include <QSortFilterProxyModel>
+#include <QStringList>
+#include <QDir>
 
 
 #include "cdatabaseadapter.h"
@@ -70,10 +72,15 @@ private:
     void resizeTableView();
     void createNewDb();
     void scanFolder();
-    void processFolder(const QString path);
+    void addToDirsForScanning(const QString &path, QStringList &dirsForScanning);
+    QStringList getDirsForScanning(const QDir &dir);
+    int filesCount(const QStringList &dirs, const QStringList &maskList);
+    void processFolder(const QString path, const QStringList &maskList);
+    void processFolders(const QStringList &dirs, const QStringList &maskList);
     void initModel(QString filename = "");
     void updateTableView();
     void deleteDuplicates();
+    void stepProgress();
 
     Ui::MainWindow *_ui;    
     QShortcut *_deleteShortcut;

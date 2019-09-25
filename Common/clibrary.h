@@ -36,7 +36,11 @@ public:
     // TODO: tests
     void deleteDuplicates();
 
-private:
+    void normalize(const CBook& book, const QString truePath = 0);
+
+private:    
+    void deleteFile(const QString &filename);
+
     QList<CBook> _data;
     QMap<QByteArray, QList<CBook*>> _doppelgangers;
 };
