@@ -1,7 +1,6 @@
 QT += core sql
 QT -= gui
 
-CONFIG += c++11
 
 TARGET = DatabaseAdapter
 CONFIG += console
@@ -32,7 +31,7 @@ release
     RCC_DIR = ../release/.rcc
     UI_DIR = ../release/.ui
 
-    LIBS += -L../debug/ -lDatabase
+    LIBS += -L../release/ -lDatabase
     LIBS += -L../release/ -lCommon
 }
 
