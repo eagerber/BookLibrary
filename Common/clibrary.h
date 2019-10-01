@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QMap>
+#include <QStringList>
 
 #include "cbook.h"
 
@@ -37,6 +38,12 @@ public:
     void deleteDuplicates();
 
     void normalize(const CBook& book, const QString truePath = 0);
+
+    void removeNonExistentFiles();
+
+    QStringList availableExtensions();
+
+    void replaceBook(CBook& book, QString path, bool deleteSource = false);
 
 private:    
     void deleteFile(const QString &filename);

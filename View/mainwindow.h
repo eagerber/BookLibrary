@@ -65,6 +65,10 @@ private slots:
 
     void on_actionRemove_full_copies_triggered();
 
+    void on_actionReplace_by_extension_triggered();
+
+    void on_actionRemove_non_existent_files_triggered();
+
 private:
     QByteArray fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hashAlgorithm);
     void openDb(QString filename);

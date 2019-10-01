@@ -11,8 +11,8 @@ class CBook : public QObject
     Q_OBJECT
 
     Q_PROPERTY(int id READ id)
-    Q_PROPERTY(QString name READ name)
-    Q_PROPERTY(QString fullPath READ fullPath)
+    Q_PROPERTY(QString name READ name WRITE setName)
+    Q_PROPERTY(QString fullPath READ fullPath WRITE setFullPath)
     Q_PROPERTY(QString extension READ extension)
     Q_PROPERTY(int size READ size)
     Q_PROPERTY(QByteArray md5 READ md5)
@@ -42,6 +42,9 @@ public:
     QString extension() const;
     int size() const;
     QByteArray md5() const;
+
+    void setName(const QString newName);
+    void setFullPath(const QString newFullPath);
 
 
 private:

@@ -104,3 +104,13 @@ QByteArray CBook::md5() const
 {
     return _md5;
 }
+
+void CBook::setName(const QString newName)
+{
+    _name = newName;
+}
+
+void CBook::setFullPath(const QString newFullPath)
+{
+    _fullPath = newFullPath;
+}

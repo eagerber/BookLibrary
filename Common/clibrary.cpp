@@ -8,6 +8,9 @@
 #include <QDebug>
 #include <QFile>
 #include <QFileInfo>
+#include <QDir>
+#include <QString>
+#include <QFile>
 
 CLibrary::CLibrary()
 {
@@ -165,6 +168,67 @@ void CLibrary::normalize(const CBook &book, const QString truePath)
     {
         remove(book);
     }
+}
+
+void CLibrary::removeNonExistentFiles()
+{
+    //TODO: need to be simplified!
+    QList<CBook> deleteList;
+    foreach(auto book, _data)
+    {
+        if(QFile::exists(book.fullPath())) continue;
+
+        deleteList.append(book);
+    }
+
+    foreach(auto book, deleteList)
+    {
+        remove(book);
+    }
+}
+
+QStringList CLibrary::availableExtensions()
+{
+    QStringList extensions;
+    foreach(auto book, _data)
+    {
+        if(extensions.contains(book.extension())) continue;
+
+        extensions.append(book.extension());
+    }
+
+    return extensions;
+}
+
+void CLibrary::replaceBook(CBook& book, QString path, bool deleteSource)
+{
+    QDir pathToFolder = QFileInfo(path).absoluteDir();
+
+    if(!pathToFolder.exists())
+    {
+        QDir().mkpath(pathToFolder.path());
+        pathToFolder.mkdir(pathToFolder.path());
+    }
+
+    QString bookName = book.name();
+    auto newPath = pathToFolder.filePath(bookName);
+    int i = 1;
+    while(QFile::exists(newPath))
+    {
+        bookName = book.name() + QString("(%1)").arg(i);
+        newPath = pathToFolder.filePath(bookName);
+    }
+
+    //TODO: do something
+    if(QFile::exists(newPath)) return;
+
+    QFile::copy(book.fullPath(), newPath);
+    if(deleteSource)
+    {
+        deleteFile(book.fullPath());
+    }
+    book.setName(bookName);
+    book.setFullPath(newPath);
 }
 
 void CLibrary::deleteFile(const QString &filename)

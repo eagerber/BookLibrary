@@ -182,9 +182,11 @@
      <addaction name="actionManual_process"/>
      <addaction name="actionAutomatic_process"/>
      <addaction name="actionRemove_full_copies"/>
+     <addaction name="actionRemove_non_existent_files"/>
     </widget>
     <addaction name="menuDuplicates"/>
     <addaction name="separator"/>
+    <addaction name="actionReplace_by_extension"/>
     <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuFile"/>
@@ -237,6 +239,16 @@
   <action name="actionRemove_full_copies">
    <property name="text">
     <string>Remove full copies</string>
+   </property>
+  </action>
+  <action name="actionReplace_by_extension">
+   <property name="text">
+    <string>Replace by extension</string>
+   </property>
+  </action>
+  <action name="actionRemove_non_existent_files">
+   <property name="text">
+    <string>Remove non-existent files</string>
    </property>
   </action>
  </widget>

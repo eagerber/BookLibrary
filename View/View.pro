@@ -59,6 +59,7 @@ SOURCES += \
     automaticduplicatesprocessdialog.cpp \
     findduplicatesdialog.cpp \
     proxybooklibrarymodel.cpp \
+    replacebyextensiondialog.cpp \
     settingswindow.cpp
 
 HEADERS += \
@@ -67,10 +68,12 @@ HEADERS += \
     automaticduplicatesprocessdialog.h \
     findduplicatesdialog.h \
     proxybooklibrarymodel.h \
+    replacebyextensiondialog.h \
     settingswindow.h
 
 FORMS += \
         mainwindow.ui \
     automaticduplicatesprocessdialog.ui \
     findduplicatesdialog.ui \
+    replacebyextensiondialog.ui \
     settingswindow.ui

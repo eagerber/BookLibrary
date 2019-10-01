@@ -16,6 +16,7 @@
 
 #include "findduplicatesdialog.h"
 #include "automaticduplicatesprocessdialog.h"
+#include "replacebyextensiondialog.h"
 #include "booklibrarymodel.h"
 #include "proxybooklibrarymodel.h"
 #include "cbook.h"
@@ -41,7 +42,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _ui->progressBar->show();
     _ui->progressBar->setValue(0);
 
+#ifdef QT_DEBUG
     openDb("123.sqlite");
+#endif
 }
 
 MainWindow::~MainWindow()
@@ -434,4 +437,18 @@ void MainWindow::on_extensionFilterLineEdit_editingFinished()
 void MainWindow::on_actionRemove_full_copies_triggered()
 {
     deleteDuplicates();
+}
+
+void MainWindow::on_actionReplace_by_extension_triggered()
+{
+    ReplaceByExtensionDialog replaceByExtensionrialog(_model->library());
+    replaceByExtensionrialog.exec();
+
+    updateTableView();
+}
+
+void MainWindow::on_actionRemove_non_existent_files_triggered()
+{
+    _model->library().removeNonExistentFiles();
+    updateTableView();
 }
