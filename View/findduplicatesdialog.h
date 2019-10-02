@@ -41,7 +41,7 @@ private:
     QStringListModel *_inspectedCopiesModel;
 
     CLibrary &_library;
-    QList<CBook> _doppelgangers;
+    QList<CBook*> _doppelgangers;
 };
 
 #endif // FINDDUPLICATESDIALOG_H

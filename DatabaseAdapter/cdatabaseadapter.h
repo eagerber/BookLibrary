@@ -20,7 +20,7 @@ public:
     void update(const CBook &book);
     void remove(const CBook &book);
 
-    void saveChanges(const QList<CBook> &books);
+    void saveChanges(const QList<CBook *> &books);
 
 private:
     CDatabase *_db;

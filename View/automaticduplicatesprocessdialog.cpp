@@ -18,12 +18,12 @@ AutomaticDuplicatesProcessDialog::AutomaticDuplicatesProcessDialog(CLibrary &lib
 
     for(int i = 0; i < doppelgangers.length(); ++i)
     {
-        auto currentBookList = _library.doppelgangers(doppelgangers[i]);
-        QStandardItem *item = new QStandardItem(currentBookList.at(0).fullPath());
+        auto currentBookList = _library.doppelgangers(*doppelgangers[i]);
+        QStandardItem *item = new QStandardItem(currentBookList.at(0)->fullPath());
 
         for(int j = 1; j < currentBookList.length(); ++j)
         {
-            QStandardItem *child = new QStandardItem(currentBookList.at(j).fullPath());
+            QStandardItem *child = new QStandardItem(currentBookList.at(j)->fullPath());
             child->setEditable( false );
             child->setForeground(QBrush(Qt::GlobalColor::red));
             item->appendRow(child);

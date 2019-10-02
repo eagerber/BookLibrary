@@ -36,9 +36,10 @@ void ReplaceByExtensionDialog::on_replacePushButton_clicked()
     if(path.isNull()) return;
     if(path.isEmpty()) return;
 
+    auto data = _library.data();
     foreach(auto item, _replacement)
     {
-        _library.replaceBook(_library[item.first], item.second);
+        _library.replaceBook(*data[item.first], item.second);
     }
 
     QMessageBox::information(this, "Information", "Files were replaced. Check destination folder.", QMessageBox::Ok);
@@ -50,21 +51,22 @@ void ReplaceByExtensionDialog::initModel()
     QDir path(ui->destinationFolderLineEdit->text());
     QStringList availableExtensions = _library.availableExtensions();
 
+    auto data = _library.data();
     if(availableExtensions.length() > 0)
     {
-        _model = new QStandardItemModel(_library.data().length() + availableExtensions.length(), 1);
+        _model = new QStandardItemModel(data.length() + availableExtensions.length(), 1);
 
         for(int i = 0; i < availableExtensions.length(); ++i)
         {
             QString currentExtension = availableExtensions[i];
             QStandardItem *item = new QStandardItem(currentExtension);
 
-            for(int j = 0; j < _library.count(); ++j)
+            for(int j = 0; j < data.length(); ++j)
             {
-                auto book = _library[j];
-                if(book.extension() != currentExtension) continue;
+                auto book = data[j];
+                if(book->extension() != currentExtension) continue;
 
-                QString newBookFilePath = path.filePath(currentExtension + QDir::separator() + book.name());
+                QString newBookFilePath = path.filePath(currentExtension + QDir::separator() + book->name());
                 QStandardItem *child = new QStandardItem(newBookFilePath);
                 child->setEditable(false);
                 item->appendRow(child);

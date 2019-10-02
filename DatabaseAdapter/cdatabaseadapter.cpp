@@ -87,15 +87,15 @@ void CDatabaseAdapter::update(const CBook &book)
     updateQuery.exec();
 }
 
-void CDatabaseAdapter::saveChanges(const QList<CBook> &books)
+void CDatabaseAdapter::saveChanges(const QList<CBook*> &books)
 {
     auto booksInDatabase = readAll();
 
     foreach (auto& item, booksInDatabase)
     {
-        auto it = std::find_if(books.begin(), books.end(), [&] (const CBook &book)
+        auto it = std::find_if(books.begin(), books.end(), [&] (const CBook *book)
         {
-            return book.id() == item.id();
+            return book->id() == item.id();
         });
 
         if(it == books.end())
@@ -108,16 +108,16 @@ void CDatabaseAdapter::saveChanges(const QList<CBook> &books)
     {
         auto it = std::find_if(booksInDatabase.begin(), booksInDatabase.end(), [&] (const CBook &book)
         {
-            return book.id() == item.id();
+            return book.id() == item->id();
         });
 
         if(it == booksInDatabase.end())
         {
-            insert(item);
+            insert(*item);
             continue;
         }
 
-        update(item);
+        update(*item);
     }
 }
 

@@ -16,42 +16,15 @@ CLibrary::CLibrary()
 
 void CLibrary::add(const CBook& book)
 {
-    _data.append(book);
-
     auto hash = book.md5();
-    if(!_doppelgangers.contains(hash))
-    {
-        _doppelgangers.insert(hash, QList<CBook*>());
-    }
-
-    _doppelgangers[hash].push_back(&_data.last());
+    _data.insert(hash, book);
 }
 
 void CLibrary::remove(const CBook& book)
 {
     auto bookHash = book.md5();
-    if(!_doppelgangers.contains(bookHash)) return;
-
-    int indexInList = _data.indexOf(book);
-    int doppelgangerIndex = _doppelgangers[bookHash].indexOf(&_data[indexInList]);
-
-    _doppelgangers[bookHash].removeAt(doppelgangerIndex);
-
-    if(_doppelgangers[bookHash].length() == 0)
-    {
-        _doppelgangers.remove(bookHash);
-    }
-
-    _data.removeAt(indexInList);
+    _data.remove(bookHash, book);
 }
-
-void CLibrary::remove(int index)
-{
-    if(index > _data.length()) return;
-
-    remove(_data[index]);
-}
-
 
 
 void CLibrary::addRange(const QList<CBook>& books)
@@ -62,79 +35,82 @@ void CLibrary::addRange(const QList<CBook>& books)
     }
 }
 
-int CLibrary::count()
+int CLibrary::count() const
 {
-    return _data.length();
-}
-
-CBook& CLibrary::operator[](int n)
-{
-    return _data[n];
+    return _data.count();
 }
 
 const CBook& CLibrary::at(int n)
 {
-    return _data[n];
+    return (_data.begin() + n).value();
 }
 
 int CLibrary::maxIndex()
 {
     int id = 0;
-    for(int i = 0; i < _data.length(); ++i)
+    foreach(auto book, _data)
     {
-        id = std::max(id, _data[i].id());
+        id = qMax(id, book.id());
     }
 
     return id;
 }
 
 
-QList<CBook>& CLibrary::data()
+QList<CBook*> CLibrary::data()
 {
-    return _data;
-}
+    QList<CBook*> bookList;
 
-QList<CBook> CLibrary::doppelgangers(CBook& book)
-{
-    QList<CBook> result;
-
-    auto& bookList = _doppelgangers[book.md5()];
-
-    for(int i = 0; i < bookList.length(); ++i)
+    for(LibraryMap::iterator it = _data.begin(); it != _data.end(); it++)
     {
-        result.push_back(*bookList[i]);
+        bookList.append(&it.value());
     }
 
-    return result;
+    return bookList;
 }
 
-QList<CBook> CLibrary::doppelgangers()
+QList<CBook*> CLibrary::doppelgangers(const CBook& book)
 {
-    QList<CBook> result;
+    QList<CBook*> doppelgangersList;
 
-    foreach (auto& bookList, _doppelgangers)
+    foreach(auto book, _data.values(book.md5()))
     {
-        if(bookList.length() > 1)
+        doppelgangersList.append(&book);
+    }
+
+    return doppelgangersList;
+}
+
+QList<CBook*> CLibrary::doppelgangers()
+{
+    QList<CBook*> doppelgangersList;
+
+    foreach (auto hash, _data.keys())
+    {
+        auto books = _data.values(hash);
+        if(books.count()  > 1)
         {
-            result.append(*bookList[0]);
+            doppelgangersList.append(&books[0]);
         }
     }
 
-    return result;
+    return doppelgangersList;
 }
 
 void CLibrary::deleteDuplicates()
 {
-    QList<CBook> fullDuplicates;
-    foreach(auto& bookList, _doppelgangers)
+    QList<CBook*> fullDuplicates;
+
+    foreach (auto hash, _data.keys())
     {
-        for(int i = 0 ; i < bookList.length(); ++i)
+        auto books = _data.values(hash);
+        for(int i = 0 ; i < books.length(); ++i)
         {
-            for(int j = i+ 1; j < bookList.length(); ++j)
+            for(int j = i+ 1; j < books.length(); ++j)
             {
-                if(bookList[i]->fullMatch(*bookList[j]))
+                if(books[i].fullMatch(books[j]))
                 {
-                    fullDuplicates.append(*bookList[j]);
+                    fullDuplicates.append(&books[j]);
                 }
             }
         }
@@ -142,22 +118,22 @@ void CLibrary::deleteDuplicates()
 
     foreach(auto book, fullDuplicates)
     {
-        remove(book);
+        remove(*book);
     }
 }
 
 void CLibrary::normalize(const CBook &book, const QString truePath)
 {
     //TODO: need to be simplified!
-    auto bookList = _doppelgangers[book.md5()];
+    auto bookList = _data.values(book.md5());
     QList<CBook> deleteList;
     for(int i = bookList.length() - 1; i > -1; --i)
     {
         auto currentBook = bookList.at(i);
-        auto currentFullPath = currentBook->fullPath();
+        auto currentFullPath = currentBook.fullPath();
         if(currentFullPath != truePath)
         {
-            deleteList.append(*currentBook);
+            deleteList.append(currentBook);
             deleteFile(currentFullPath);
         }
     }
@@ -206,7 +182,7 @@ void CLibrary::replaceBook(CBook& book, QString path, bool deleteSource)
         deleteFile(book.fullPath());
     }
     book.setName(fileInfo.fileName());
-    book.setFullPath(fileInfo.absolutePath());
+    book.setFullPath(fileInfo.absoluteFilePath());
 }
 
 void CLibrary::deleteFile(const QString &filename)
