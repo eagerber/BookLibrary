@@ -2,15 +2,13 @@
 
 #include <algorithm>
 
-//TODO: delete file
-#include "Windows.h"
-#include "shellapi.h"
 #include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
 #include <QString>
-#include <QFile>
+
+#include "utils.h"
 
 CLibrary::CLibrary()
 {
@@ -202,77 +200,18 @@ QStringList CLibrary::availableExtensions()
 
 void CLibrary::replaceBook(CBook& book, QString path, bool deleteSource)
 {
-    QDir pathToFolder = QFileInfo(path).absoluteDir();
-
-    if(!pathToFolder.exists())
-    {
-        QDir().mkpath(pathToFolder.path());
-        pathToFolder.mkdir(pathToFolder.path());
-    }
-
-    QString bookName = book.name();
-    auto newPath = pathToFolder.filePath(bookName);
-    int i = 1;
-    while(QFile::exists(newPath))
-    {
-        bookName = book.name() + QString("(%1)").arg(i);
-        newPath = pathToFolder.filePath(bookName);
-    }
-
-    //TODO: do something
-    if(QFile::exists(newPath)) return;
-
-    QFile::copy(book.fullPath(), newPath);
+    auto fileInfo = Utils::replaceFile(book.fullPath(), path);
     if(deleteSource)
     {
         deleteFile(book.fullPath());
     }
-    book.setName(bookName);
-    book.setFullPath(newPath);
+    book.setName(fileInfo.fileName());
+    book.setFullPath(fileInfo.absolutePath());
 }
 
 void CLibrary::deleteFile(const QString &filename)
 {
-    QFileInfo fileinfo(filename);
-    if( !fileinfo.exists() ) return;
-        //throw OdtCore::Exception( "File doesnt exists, cant move to trash" );
-
-    WCHAR from[ MAX_PATH ];
-    memset( from, 0, sizeof( from ));
-    int l = fileinfo.absoluteFilePath().toWCharArray( from );
-    Q_ASSERT( 0 <= l && l < MAX_PATH );
-    from[ l ] = '\0';
-    SHFILEOPSTRUCT fileop;
-    memset( &fileop, 0, sizeof( fileop ) );
-    fileop.wFunc = FO_DELETE;
-    fileop.pFrom = from;
-    fileop.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT;
-    int rv = SHFileOperation( &fileop );
-    if( 0 != rv )
-    {
-        qDebug() << rv << QString::number( rv ).toInt( nullptr, 8 );
-        return;
-        //throw OdtCore::Exception( "move to trash failed" );
-    }
-
-    /*
-
-    //QFile file(filename);
-    //file.remove();
-
-    // Move to recycle bin
-    LPCSTR lpcFrom = (LPCSTR)filename.toLocal8Bit().constData();
-
-    SHFILEOPSTRUCTA operation;
-
-    operation.wFunc = FO_DELETE;
-    operation.pFrom = lpcFrom;
-    operation.fFlags = FOF_ALLOWUNDO|FOF_NO_UI|FOF_NORECURSION;
-
-    int result = SHFileOperationA(&operation);
-
-    qDebug() << filename << result;
-    */
+    Utils::deleteFile(filename);
 }
 
 

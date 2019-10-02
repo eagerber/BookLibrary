@@ -50,6 +50,7 @@ private:
 
     QList<CBook> _data;
     QMap<QByteArray, QList<CBook*>> _doppelgangers;
+
 };
 
 #endif // CLIBRARY_H

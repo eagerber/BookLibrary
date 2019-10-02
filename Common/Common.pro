@@ -12,6 +12,8 @@ TEMPLATE = lib
 
 DEFINES += COMMON_LIBRARY
 
+INCLUDEPATH += ../Utils
+
 debug
 {
     DESTDIR = ../debug
@@ -19,6 +21,8 @@ debug
     MOC_DIR = ../debug/.moc
     RCC_DIR = ../debug/.rcc
     UI_DIR = ../debug/.ui
+
+    LIBS += -L../debug/ -lUtils
 }
 
 release
@@ -28,6 +32,8 @@ release
     MOC_DIR = ../release/.moc
     RCC_DIR = ../release/.rcc
     UI_DIR = ../release/.ui
+
+    LIBS += -L../release/ -lUtils
 }
 
 DEFINES += QT_DEPRECATED_WARNINGS
