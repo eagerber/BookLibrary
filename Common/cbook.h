@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QByteArray>
+#include <QUuid>
 
 
 class CBook : public QObject
@@ -36,7 +37,7 @@ public:
     bool fullMatch (const CBook& rValue) const;
     bool HashSumMatch(const CBook& rValue) const;
 
-    int id() const;
+    QUuid id() const;
     QString name() const;
     QString fullPath() const;
     QString extension() const;
@@ -48,7 +49,7 @@ public:
 
 
 private:
-    int _id;
+    QUuid _id;
     QString _name;
     QString _fullPath;
     QString _extension;

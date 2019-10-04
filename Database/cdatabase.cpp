@@ -10,6 +10,7 @@
 
 
 const QString createQuery = "CREATE TABLE `Catalog` ( `Id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `FullPath` TEXT, `Name` TEXT, `Extension` TEXT, `Size` INTEGER, `MD5`	BLOB);";
+//const QString createQuery = "CREATE TABLE `Catalog` ( `Id` BLOB NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `FullPath` TEXT, `Name` TEXT, `Extension` TEXT, `Size` INTEGER, `MD5`	BLOB);";
 
 class CDatabasePimpl
 {
@@ -40,14 +41,14 @@ public:
             throw QException();
         }
 
-        if(filename == _filename)
+        if(filename == _database.databaseName())
         {
             return;
         }
 
         close();
 
-        _filename = filename;
+        _database.setDatabaseName(filename);
 
         internalOpen();
     }
@@ -64,13 +65,12 @@ private:
 
     bool open()
     {
-        _database.setDatabaseName(_filename);
         return _database.open();
     }
 
     void internalOpen()
     {
-        bool fileNotExists = !QFile::exists(_filename);
+        bool fileNotExists = !QFile::exists(_database.databaseName());
         if (!open())
         {
             qDebug() << _database.lastError().text();
@@ -105,8 +105,6 @@ private:
     }
 
     QSqlDatabase _database;
-    QString _filename;
-
 };
 
 

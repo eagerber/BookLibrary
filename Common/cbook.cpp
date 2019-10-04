@@ -75,7 +75,7 @@ bool CBook::HashSumMatch(const CBook& rValue) const
     return _md5 == rValue._md5;
 }
 
-int CBook::id() const
+QUuid CBook::id() const
 {
     return _id;
 }
